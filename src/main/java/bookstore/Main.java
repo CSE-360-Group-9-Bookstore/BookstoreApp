@@ -28,7 +28,7 @@ public class Main extends Application {
         }
 
         //super basic connection to a database, will write basic database methods such as add and stuff soon.
-
+        //testing
         btn.setOnAction(event -> System.out.println("Hello World!"));
 
         StackPane root = new StackPane();
