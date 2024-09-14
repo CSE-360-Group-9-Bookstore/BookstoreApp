@@ -16,6 +16,8 @@ public class Main extends Application {
         testDB db = new testDB();
         System.out.println(db.getTableData("test"));
 
+        db.addName("Jane", "Doe");
+
         String[][] data = db.getTableData("test").toArray(new String[0][]);
 
         for (String[] row : data) {
