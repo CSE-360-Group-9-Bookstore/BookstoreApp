@@ -59,4 +59,6 @@ public class testDB {
         }
     }
 
+    public void deleteName(String firstName, String lastName)
+
 }

@@ -16,7 +16,9 @@ public class Main extends Application {
         testDB db = new testDB();
         System.out.println(db.getTableData("test"));
 
-        db.addName("Jane", "Doe");
+        //db.addName("Jane", "Doe"); try adding your name here
+
+        //db.addName("Jane","Doe")
 
         String[][] data = db.getTableData("test").toArray(new String[0][]);
 
@@ -44,4 +46,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
+
 }
