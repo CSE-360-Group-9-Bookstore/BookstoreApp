@@ -15,6 +15,8 @@ public class testDB {
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
 
+    //testing
+
     /**
      * Retrieves all records from the specified table.
      *
