@@ -151,6 +151,7 @@ public class Main extends Application {
             Parent content = loader.load();
             */
 
+            //wtf is this
             mainLayout.setCenter(content);
         } catch (Exception e) {
             e.printStackTrace();
