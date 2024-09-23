@@ -8,11 +8,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.fxml.FXMLLoader;
+import java.net.URL;
 
 public class Main extends Application {
 
@@ -22,31 +27,39 @@ public class Main extends Application {
     private static final String BACKGROUND_STYLE = "-fx-background-color: #222;";
     private static final Font FONT = Font.font("Arial", 14);
 
+    private Scene loginScene;
+    private Scene mainScene;
+    private BorderPane mainLayout;
+    private Stage primaryStage; // Keep a reference to the primaryStage
+
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage; // Assign the primaryStage
         primaryStage.setTitle("Login");
 
         // Create the login scene
-        Scene loginScene = createLoginScene(primaryStage);
+        loginScene = createLoginScene();
 
         // Set the scene to login scene
         primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 
-    private Scene createLoginScene(Stage primaryStage) {
+    private Scene createLoginScene() {
         // Create username and password fields
         TextField usernameField = createStyledTextField("Enter username");
         PasswordField passwordField = createStyledPasswordField("Enter password");
+        usernameField.setText("admin");  // Preload with "admin"
+        passwordField.setText("password");  // Preload with "password"
+
+
 
         // Create submit button
         Button submitButton = createStyledButton("Login");
 
         // Create a label for additional text below the button
-        // (e.g., "Forgot your password?")
         Label additionalText = new Label("For now: Username = admin, Password = password");
         additionalText.setTextFill(Color.WHITE);
-
 
         // Add event handler to submit button
         submitButton.setOnAction(event -> {
@@ -56,7 +69,7 @@ public class Main extends Application {
             String[] result = authenticateUser(username, password);
             if (result.length > 0) {
                 // Successful login
-                Scene mainScene = createMainScene(primaryStage);
+                createMainLayout(); // Initialize the main layout
                 primaryStage.setScene(mainScene);
             } else {
                 // Failed login, stay on login page
@@ -77,50 +90,71 @@ public class Main extends Application {
         return new Scene(root, 350, 250);  // Adjusted height to accommodate new text
     }
 
+    private void createMainLayout() {
+        // Create the top bar with buttons
+        Node topBar = createTopBar();
 
-    private Scene createMainScene(Stage primaryStage) {
-        primaryStage.setTitle("Add Name to Database");
+        // Create the main layout
+        mainLayout = new BorderPane();
+        mainLayout.setTop(topBar);
+        mainLayout.setStyle(BACKGROUND_STYLE);
 
-        // First Name Field
-        TextField firstNameField = createStyledTextField("Enter first name");
+        // Load the testing.fxml into the center
+        loadCenterContent("testing.fxml");
 
-        // Last Name Field
-        TextField lastNameField = createStyledTextField("Enter last name");
+        // Create the main scene
+        mainScene = new Scene(mainLayout, 600, 400);
+    }
 
-        // Add Name Button
-        Button addButton = createStyledButton("Add Name");
+    private Node createTopBar() {
+        Button backToLoginButton = createStyledButton("Back to Login");
+        Button testingButton = createStyledButton("Testing");
+        Button page2Button = createStyledButton("Page2");
 
-        // Database connection (assuming you have this class)
-        testDB db = new testDB();
-
-        // Event handler for adding the name to the database
-        addButton.setOnAction(event -> {
-            String firstName = firstNameField.getText();
-            String lastName = lastNameField.getText();
-
-            // Add name to database
-            db.addName(firstName, lastName);
-
-            // Clear input fields
-            firstNameField.clear();
-            lastNameField.clear();
-        });
-
-        // Back to Login button
-        Button backButton = createStyledButton("Back to Login");
-        backButton.setOnAction(event -> {
-            // Go back to login scene
-            Scene loginScene = createLoginScene(primaryStage);
+        // Event handlers
+        backToLoginButton.setOnAction(event -> {
             primaryStage.setScene(loginScene);
         });
 
-        // Layout and spacing
-        VBox root = new VBox(15);
-        root.setPadding(new Insets(20));
-        root.getChildren().addAll(firstNameField, lastNameField, addButton, backButton);
-        root.setStyle(BACKGROUND_STYLE);
+        testingButton.setOnAction(event -> {
+            loadCenterContent("testing.fxml");
+        });
 
-        return new Scene(root, 350, 250);
+        page2Button.setOnAction(event -> {
+            loadCenterContent("page2.fxml");
+        });
+
+        HBox topBar = new HBox(10);
+        topBar.setPadding(new Insets(10));
+        topBar.getChildren().addAll(backToLoginButton, testingButton, page2Button);
+        // Darker background for the top bar
+        topBar.setStyle("-fx-background-color: #111;");
+
+        return topBar;
+    }
+
+
+    private void loadCenterContent(String fxmlFile) {
+        try {
+            URL resourceURL = getClass().getResource("/" + fxmlFile);
+            System.out.println("Loading FXML from: " + resourceURL);
+            if (resourceURL == null) {
+                throw new RuntimeException("FXML file not found: " + fxmlFile);
+            }
+            // Option 1: Using the static load method
+            Parent content = FXMLLoader.load(resourceURL);
+
+            // Option 2: Using an instance of FXMLLoader
+            /*
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(resourceURL);
+            Parent content = loader.load();
+            */
+
+            mainLayout.setCenter(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Method to create styled TextField
@@ -146,7 +180,6 @@ public class Main extends Application {
         Button button = new Button(text);
         button.setStyle(BUTTON_STYLE);
         button.setFont(FONT);
-        button.setMaxWidth(Double.MAX_VALUE);  // Make button expand horizontally
         return button;
     }
 
@@ -154,8 +187,6 @@ public class Main extends Application {
     private String[] authenticateUser(String username, String password) {
 
         // Hardcoded authentication for testing purposes
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
         if ("admin".equals(username) && "password".equals(password)) {
             return new String[]{"hello", "world"};
         } else {
