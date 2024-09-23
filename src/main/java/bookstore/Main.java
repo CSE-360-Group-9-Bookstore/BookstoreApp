@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 import java.net.URL;
+import java.util.*;
 
 public class Main extends Application {
 
@@ -31,6 +32,17 @@ public class Main extends Application {
     private Scene mainScene;
     private BorderPane mainLayout;
     private Stage primaryStage; // Keep a reference to the primaryStage
+
+    // Map of page names to FXML files
+    private static final Map<String, String> pageMap = new HashMap<>();
+    static {
+        pageMap.put("testing", "testing.fxml");
+        pageMap.put("page2", "page2.fxml");
+        // Add new pages here
+        // Example: pageMap.put("newPage", "newPage.fxml");
+    }
+
+    private List<String> accessiblePages; // List of pages accessible to the logged-in user
 
     @Override
     public void start(Stage primaryStage) {
@@ -52,13 +64,11 @@ public class Main extends Application {
         usernameField.setText("admin");  // Preload with "admin"
         passwordField.setText("password");  // Preload with "password"
 
-
-
         // Create submit button
         Button submitButton = createStyledButton("Login");
 
         // Create a label for additional text below the button
-        Label additionalText = new Label("For now: Username = admin, Password = password");
+        Label additionalText = new Label("For now: Username = admin, Password = password \n \n Filtered Pages: \n         username: page2user password = password \n         username: testing password:password");
         additionalText.setTextFill(Color.WHITE);
 
         // Add event handler to submit button
@@ -69,6 +79,7 @@ public class Main extends Application {
             String[] result = authenticateUser(username, password);
             if (result.length > 0) {
                 // Successful login
+                accessiblePages = Arrays.asList(result);
                 createMainLayout(); // Initialize the main layout
                 primaryStage.setScene(mainScene);
             } else {
@@ -99,8 +110,10 @@ public class Main extends Application {
         mainLayout.setTop(topBar);
         mainLayout.setStyle(BACKGROUND_STYLE);
 
-        // Load the testing.fxml into the center
-        loadCenterContent("testing.fxml");
+        // Load the first accessible page into the center, or leave blank if none
+        if (!accessiblePages.isEmpty()) {
+            loadCenterContent(accessiblePages.get(0));
+        }
 
         // Create the main scene
         mainScene = new Scene(mainLayout, 600, 400);
@@ -108,50 +121,41 @@ public class Main extends Application {
 
     private Node createTopBar() {
         Button backToLoginButton = createStyledButton("Back to Login");
-        Button testingButton = createStyledButton("Testing");
-        Button page2Button = createStyledButton("Page2");
-
-        // Event handlers
         backToLoginButton.setOnAction(event -> {
             primaryStage.setScene(loginScene);
         });
 
-        testingButton.setOnAction(event -> {
-            loadCenterContent("testing.fxml");
-        });
-
-        page2Button.setOnAction(event -> {
-            loadCenterContent("page2.fxml");
-        });
-
         HBox topBar = new HBox(10);
         topBar.setPadding(new Insets(10));
-        topBar.getChildren().addAll(backToLoginButton, testingButton, page2Button);
+        topBar.getChildren().add(backToLoginButton);
         // Darker background for the top bar
         topBar.setStyle("-fx-background-color: #111;");
+
+        // Create buttons for accessible pages
+        for (String pageName : accessiblePages) {
+            final String currentPage = pageName; // Capture the pageName
+            Button pageButton = createStyledButton(currentPage);
+            pageButton.setOnAction(event -> {
+                loadCenterContent(currentPage);
+            });
+            topBar.getChildren().add(pageButton);
+        }
 
         return topBar;
     }
 
-
-    private void loadCenterContent(String fxmlFile) {
+    private void loadCenterContent(String pageName) {
         try {
+            String fxmlFile = pageMap.get(pageName);
+            if (fxmlFile == null) {
+                throw new RuntimeException("No FXML file mapped for page: " + pageName);
+            }
             URL resourceURL = getClass().getResource("/" + fxmlFile);
             System.out.println("Loading FXML from: " + resourceURL);
             if (resourceURL == null) {
                 throw new RuntimeException("FXML file not found: " + fxmlFile);
             }
-            // Option 1: Using the static load method
             Parent content = FXMLLoader.load(resourceURL);
-
-            // Option 2: Using an instance of FXMLLoader
-            /*
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(resourceURL);
-            Parent content = loader.load();
-            */
-
-            //wtf is this
             mainLayout.setCenter(content);
         } catch (Exception e) {
             e.printStackTrace();
@@ -186,11 +190,16 @@ public class Main extends Application {
 
     // AuthenticateUser method
     private String[] authenticateUser(String username, String password) {
-
         // Hardcoded authentication for testing purposes
         if ("admin".equals(username) && "password".equals(password)) {
-            return new String[]{"hello", "world"};
-        } else {
+            return new String[]{"testing", "page2"};
+        } else if ("page2user".equals(username) && "password".equals(password)) {
+            return new String[]{"page2"};
+        }
+        else if ("testing".equals(username) && "password".equals(password)) {
+            return new String[]{"testing"};
+        }
+        else {
             return new String[0]; // empty array
         }
     }
