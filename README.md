@@ -100,4 +100,3 @@ The `authenticateUser` method currently uses hardcoded usernames and passwords. 
 - Development tips, including the preloaded login credentials.
 - Troubleshooting and customizability of the app.
 
-Let me know if you need any adjustments
