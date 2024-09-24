@@ -43,9 +43,12 @@ public class Main extends Application {
     }
 
     private List<String> accessiblePages; // List of pages accessible to the logged-in user
+    private Users users; // Declare Users instance at class level
 
     @Override
     public void start(Stage primaryStage) {
+        users = new Users(); // Initialize Users instance
+
         this.primaryStage = primaryStage; // Assign the primaryStage
         primaryStage.setTitle("Login");
 
@@ -68,7 +71,7 @@ public class Main extends Application {
         Button submitButton = createStyledButton("Login");
 
         // Create a label for additional text below the button
-        Label additionalText = new Label("For now: Username = admin, Password = password \n \n Filtered Pages: \n         username: page2user password = password \n         username: testing password:password");
+        Label additionalText = new Label("Enter your username and password.");
         additionalText.setTextFill(Color.WHITE);
 
         // Add event handler to submit button
@@ -76,19 +79,21 @@ public class Main extends Application {
             String username = usernameField.getText();
             String password = passwordField.getText();
 
-            String[] result = authenticateUser(username, password);
-            if (result.length > 0) {
+            // Call the authenticateUser method from Users class
+            String[] result = users.authenticateUser(username, password);
+
+            if ("error".equals(result[0])) {
+                // Failed login, show error message
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Login Failed");
+                alert.setHeaderText(null);
+                alert.setContentText(result[1]); // Display the error message from Users class
+                alert.showAndWait();
+            } else {
                 // Successful login
                 accessiblePages = Arrays.asList(result);
                 createMainLayout(); // Initialize the main layout
                 primaryStage.setScene(mainScene);
-            } else {
-                // Failed login, stay on login page
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Login Failed");
-                alert.setHeaderText(null);
-                alert.setContentText("Invalid username or password.");
-                alert.showAndWait();
             }
         });
 
@@ -186,22 +191,6 @@ public class Main extends Application {
         button.setStyle(BUTTON_STYLE);
         button.setFont(FONT);
         return button;
-    }
-
-    // AuthenticateUser method
-    private String[] authenticateUser(String username, String password) {
-        // Hardcoded authentication for testing purposes
-        if ("admin".equals(username) && "password".equals(password)) {
-            return new String[]{"testing", "page2"};
-        } else if ("page2user".equals(username) && "password".equals(password)) {
-            return new String[]{"page2"};
-        }
-        else if ("testing".equals(username) && "password".equals(password)) {
-            return new String[]{"testing"};
-        }
-        else {
-            return new String[0]; // empty array
-        }
     }
 
     public static void main(String[] args) {
