@@ -140,6 +140,9 @@ public class Users {
 
             System.out.println("Role: " + role);
 
+            //strip all non-alphanumeric characters
+            role = role.replaceAll("[^a-zA-Z0-9]", "");
+
 
 
 
