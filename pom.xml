@@ -56,24 +56,38 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
+            <!-- JavaFX Maven Plugin -->
             <plugin>
-               <groupId>org.openjfx</groupId>
+                <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <executions>
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>bookstore.Main</mainClass>
+                            <mainClass>bookstore.Main</mainClass> <!-- Make sure this is your main class -->
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Maven JAR Plugin to package the application -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>bookstore.Main</mainClass> <!-- Replace with your main class -->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
 
 </project>
