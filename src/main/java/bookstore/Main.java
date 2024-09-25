@@ -22,10 +22,7 @@ import java.util.*;
 
 public class Main extends Application {
 
-    // Constants for UI customization
-    private static final String BUTTON_STYLE = "-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;";
-    private static final String TEXTFIELD_STYLE = "-fx-background-color: #333; -fx-text-fill: white; -fx-prompt-text-fill: #aaa;";
-    private static final String BACKGROUND_STYLE = "-fx-background-color: #222;";
+    // Font for UI components
     private static final Font FONT = Font.font("Arial", 14);
 
     private Scene loginScene;
@@ -72,7 +69,7 @@ public class Main extends Application {
 
         // Create a label for additional text below the button
         Label additionalText = new Label("Enter your username and password.");
-        additionalText.setTextFill(Color.WHITE);
+        additionalText.setTextFill(ColorConfig.ADDITIONAL_TEXT);
 
         // Add event handler to submit button
         submitButton.setOnAction(event -> {
@@ -101,7 +98,7 @@ public class Main extends Application {
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
         root.getChildren().addAll(usernameField, passwordField, submitButton, additionalText);
-        root.setStyle(BACKGROUND_STYLE);
+        root.setStyle(ColorConfig.getBackgroundStyle());
 
         return new Scene(root, 350, 250);  // Adjusted height to accommodate new text
     }
@@ -113,7 +110,7 @@ public class Main extends Application {
         // Create the main layout
         mainLayout = new BorderPane();
         mainLayout.setTop(topBar);
-        mainLayout.setStyle(BACKGROUND_STYLE);
+        mainLayout.setStyle(ColorConfig.getBackgroundStyle());
 
         // Load the first accessible page into the center, or leave blank if none
         if (!accessiblePages.isEmpty()) {
@@ -133,8 +130,7 @@ public class Main extends Application {
         HBox topBar = new HBox(10);
         topBar.setPadding(new Insets(10));
         topBar.getChildren().add(backToLoginButton);
-        // Darker background for the top bar
-        topBar.setStyle("-fx-background-color: #111;");
+        topBar.setStyle(ColorConfig.getTopBarStyle());
 
         // Create buttons for accessible pages
         for (String pageName : accessiblePages) {
@@ -171,7 +167,7 @@ public class Main extends Application {
     private TextField createStyledTextField(String promptText) {
         TextField textField = new TextField();
         textField.setPromptText(promptText);
-        textField.setStyle(TEXTFIELD_STYLE);
+        textField.setStyle(ColorConfig.getTextFieldStyle());
         textField.setFont(FONT);
         return textField;
     }
@@ -180,7 +176,7 @@ public class Main extends Application {
     private PasswordField createStyledPasswordField(String promptText) {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText(promptText);
-        passwordField.setStyle(TEXTFIELD_STYLE);
+        passwordField.setStyle(ColorConfig.getTextFieldStyle());
         passwordField.setFont(FONT);
         return passwordField;
     }
@@ -188,7 +184,7 @@ public class Main extends Application {
     // Method to create styled Button
     private Button createStyledButton(String text) {
         Button button = new Button(text);
-        button.setStyle(BUTTON_STYLE);
+        button.setStyle(ColorConfig.getButtonStyle());
         button.setFont(FONT);
         return button;
     }
