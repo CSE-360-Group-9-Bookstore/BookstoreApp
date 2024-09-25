@@ -73,11 +73,19 @@ public class Main extends Application {
 
         // Add event handler to submit button
         submitButton.setOnAction(event -> {
+            // Change the button text to indicate logging in
+            submitButton.setText("Logging you in...");
+            submitButton.setDisable(true); // Optionally disable the button to prevent multiple clicks
+
             String username = usernameField.getText();
             String password = passwordField.getText();
 
             // Call the authenticateUser method from Users class
             String[] result = users.authenticateUser(username, password);
+
+            // Revert the button text after authentication
+            submitButton.setText("Login");
+            submitButton.setDisable(false); // Re-enable the button
 
             if ("error".equals(result[0])) {
                 // Failed login, show error message
@@ -93,6 +101,7 @@ public class Main extends Application {
                 primaryStage.setScene(mainScene);
             }
         });
+
 
         // Layout
         VBox root = new VBox(15);
