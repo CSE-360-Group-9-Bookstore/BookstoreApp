@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,7 @@ public class Main extends Application {
 
     // Font for UI components
     private static final Font FONT = Font.font("Arial", 14);
+    private static final Font WELCOME_FONT = Font.font("Arial", 20);
 
     private Scene loginScene;
     private Scene mainScene;
@@ -41,6 +44,7 @@ public class Main extends Application {
 
     private List<String> accessiblePages; // List of pages accessible to the logged-in user
     private Users users; // Declare Users instance at class level
+    private String loggedInUsername; // Store the logged-in username
 
     @Override
     public void start(Stage primaryStage) {
@@ -96,12 +100,12 @@ public class Main extends Application {
                 alert.showAndWait();
             } else {
                 // Successful login
+                loggedInUsername = username; // Store the logged-in username
                 accessiblePages = Arrays.asList(result);
                 createMainLayout(); // Initialize the main layout
                 primaryStage.setScene(mainScene);
             }
         });
-
 
         // Layout
         VBox root = new VBox(15);
@@ -109,7 +113,7 @@ public class Main extends Application {
         root.getChildren().addAll(usernameField, passwordField, submitButton, additionalText);
         root.setStyle(ColorConfig.getBackgroundStyle());
 
-        return new Scene(root, 350, 250);  // Adjusted height to accommodate new text
+        return new Scene(root, 900, 550);  // Adjusted height to accommodate new text
     }
 
     private void createMainLayout() {
@@ -127,21 +131,15 @@ public class Main extends Application {
         }
 
         // Create the main scene
-        mainScene = new Scene(mainLayout, 600, 400);
+        mainScene = new Scene(mainLayout, 900 * 1.38, 550 * 1.38);  // Adjusted height to accommodate new text
     }
 
     private Node createTopBar() {
-        Button backToLoginButton = createStyledButton("Back to Login");
-        backToLoginButton.setOnAction(event -> {
-            primaryStage.setScene(loginScene);
-        });
-
         HBox topBar = new HBox(10);
         topBar.setPadding(new Insets(10));
-        topBar.getChildren().add(backToLoginButton);
         topBar.setStyle(ColorConfig.getTopBarStyle());
 
-        // Create buttons for accessible pages
+        // Create buttons for accessible pages (left justified)
         for (String pageName : accessiblePages) {
             final String currentPage = pageName; // Capture the pageName
             Button pageButton = createStyledButton(currentPage);
@@ -150,6 +148,29 @@ public class Main extends Application {
             });
             topBar.getChildren().add(pageButton);
         }
+
+        // Create a spacer to push elements to the right
+        Region leftSpacer = new Region();
+        Region rightSpacer = new Region();
+        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
+        topBar.getChildren().add(leftSpacer);
+
+        // Create welcome label (centered)
+        Label welcomeLabel = new Label("Welcome, " + loggedInUsername + "!");
+        welcomeLabel.setFont(WELCOME_FONT);
+        welcomeLabel.setStyle("-fx-font-weight: bold;");
+        //make the welcome label white
+        welcomeLabel.setTextFill(Color.web("#FFFFFF"));
+        topBar.getChildren().add(welcomeLabel);
+        topBar.getChildren().add(rightSpacer);
+
+        // Create Change User button (right justified)
+        Button backToLoginButton = createStyledButton("Change User (Current: " + loggedInUsername + ")");
+        backToLoginButton.setOnAction(event -> {
+            primaryStage.setScene(loginScene);
+        });
+        topBar.getChildren().add(backToLoginButton);
 
         return topBar;
     }
