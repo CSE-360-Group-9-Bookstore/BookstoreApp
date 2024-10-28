@@ -23,60 +23,79 @@ import java.net.URL;
 import java.util.*;
 
 public class Main extends Application {
+
+    // Font for UI components
     private static final Font FONT = Font.font("Arial", 14);
     private static final Font WELCOME_FONT = Font.font("Arial", 20);
 
     private Scene loginScene;
     private Scene mainScene;
     private BorderPane mainLayout;
-    private Stage primaryStage;
+    private Stage primaryStage; // Keep a reference to the primaryStage
+
+    // Map of page names to FXML files
     private static final Map<String, String> pageMap = new HashMap<>();
     static {
         pageMap.put("testing", "testing.fxml");
         pageMap.put("page2", "page2.fxml");
+        // Add new pages here
+        // Example: pageMap.put("newPage", "newPage.fxml");
     }
 
-    private List<String> accessiblePages;
-    private Users users;
-    private String loggedInUsername;
+    private List<String> accessiblePages; // List of pages accessible to the logged-in user
+    private Users users; // Declare Users instance at class level
+    private String loggedInUsername; // Store the logged-in username
 
     @Override
     public void start(Stage primaryStage) {
-        users = new Users();
-        this.primaryStage = primaryStage;
+        users = new Users(); // Initialize Users instance
+
+        this.primaryStage = primaryStage; // Assign the primaryStage
         primaryStage.setTitle("Login");
 
+        // Create the login scene
         loginScene = createLoginScene();
 
+        // Set the scene to login scene
         primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 
     private Scene createLoginScene() {
-
+        // Create username and password fields
         TextField usernameField = createStyledTextField("Enter username");
         PasswordField passwordField = createStyledPasswordField("Enter password");
-        usernameField.setText("admin");
-        passwordField.setText("password");
+        usernameField.setText("admin");  // Preload with "admin"
+        passwordField.setText("password");  // Preload with "password"
+
+        // Create submit button
         Button submitButton = createStyledButton("Login");
+
+        // Create a label for additional text below the button
         Label additionalText = new Label("Enter your username and password.");
         additionalText.setTextFill(ColorConfig.ADDITIONAL_TEXT);
+
+        // Add event handler to submit button
         submitButton.setOnAction(event -> {
+            // Change the button text to indicate logging in
             submitButton.setText("Logging you in...");
             submitButton.setDisable(true);
             String username = usernameField.getText();
             String password = passwordField.getText();
             String[] result = users.authenticateUser(username, password);
+            
             submitButton.setText("Login");
             submitButton.setDisable(false);
 
             if ("error".equals(result[0])) {
+                
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Login Failed");
                 alert.setHeaderText(null);
                 alert.setContentText(result[1]);
                 alert.showAndWait();
             } else {
+              
                 loggedInUsername = username;
                 accessiblePages = Arrays.asList(result);
                 createMainLayout();
@@ -111,7 +130,7 @@ public class Main extends Application {
         topBar.setStyle(ColorConfig.getTopBarStyle());
 
         for (String pageName : accessiblePages) {
-            final String currentPage = pageName;
+            final String currentPage = pageName; // Capture the pageName
             Button pageButton = createStyledButton(currentPage);
             pageButton.setOnAction(event -> {
                 loadCenterContent(currentPage);

@@ -94,7 +94,7 @@ public class ColorConfig {
 
 
     private static ColorScheme getCurrentScheme() {
-        return colorSchemes.getOrDefault(selectedScheme, colorSchemes.get(1)); 
+        return colorSchemes.getOrDefault(selectedScheme, colorSchemes.get(1)); // Default to Scheme 1
     }
 
 

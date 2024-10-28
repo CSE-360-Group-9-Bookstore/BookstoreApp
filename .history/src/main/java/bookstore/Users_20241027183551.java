@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class Users {
 
+    // Database connection details
     private static final String DB_URL = "jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres";
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
@@ -155,6 +156,6 @@ public class Users {
         }
     }
 
- 
+    // Additional methods can be added here if needed
 
 }

@@ -42,9 +42,12 @@ public class testDB {
     public boolean addName(String firstName, String lastName) {
         String query = "INSERT INTO test VALUES (?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
+
+            // Execute the insert operation
             stmt.executeUpdate();
             return true;
 

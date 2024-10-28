@@ -24,6 +24,7 @@ public class testDB {
 
             int columnCount = rs.getMetaData().getColumnCount();
 
+            // Iterate through the result set and add each row to the list
             while (rs.next()) {
                 String[] row = new String[columnCount];
                 for (int i = 1; i <= columnCount; i++) {
@@ -39,12 +40,24 @@ public class testDB {
         return data;
     }
 
+    /**
+     * Inserts a new name (first name and last name) into the 'test' table.
+     *
+     * @param firstName the first name to be added
+     * @param lastName the last name to be added
+     * @return true if the name was added successfully, false otherwise
+     */
     public boolean addName(String firstName, String lastName) {
         String query = "INSERT INTO test VALUES (?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS); PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Set values for the query parameters
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
+
+            // Execute the insert operation
             stmt.executeUpdate();
             return true;
 

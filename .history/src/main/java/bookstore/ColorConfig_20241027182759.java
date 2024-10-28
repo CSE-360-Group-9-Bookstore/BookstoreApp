@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ColorConfig {
 
-    private static final int selectedScheme = 1; 
+    private static final int selectedScheme = 1; /
 
     public static class ColorScheme {
         public final Color background;
@@ -28,7 +28,7 @@ public class ColorConfig {
             this.textFieldText = textFieldText;
             this.textFieldPromptText = textFieldPromptText;
             this.additionalText = additionalText;
-            this.topBar = calculateDarkerColor(background, 0.9); 
+            this.topBar = calculateDarkerColor(background, 0.9); // 10% darker
         }
     }
 
@@ -94,7 +94,7 @@ public class ColorConfig {
 
 
     private static ColorScheme getCurrentScheme() {
-        return colorSchemes.getOrDefault(selectedScheme, colorSchemes.get(1)); 
+        return colorSchemes.getOrDefault(selectedScheme, colorSchemes.get(1)); // Default to Scheme 1
     }
 
 
@@ -107,7 +107,7 @@ public class ColorConfig {
     public static final Color ADDITIONAL_TEXT = getCurrentScheme().additionalText;
     public static final Color TOP_BAR = getCurrentScheme().topBar;
 
-
+    // Method to generate button CSS style
     public static String getButtonStyle() {
         return String.format(
                 "-fx-background-color: %s; -fx-text-fill: %s; -fx-background-radius: 5px;",
@@ -116,7 +116,7 @@ public class ColorConfig {
         );
     }
 
-
+    // Method to generate text field CSS style
     public static String getTextFieldStyle() {
         return String.format(
                 "-fx-background-color: %s; -fx-text-fill: %s; -fx-prompt-text-fill: %s;",
@@ -126,17 +126,17 @@ public class ColorConfig {
         );
     }
 
-
+    // Method to generate background CSS style
     public static String getBackgroundStyle() {
         return String.format("-fx-background-color: %s;", toHex(BACKGROUND));
     }
 
-
+    // Method to generate top bar CSS style
     public static String getTopBarStyle() {
         return String.format("-fx-background-color: %s;", toHex(TOP_BAR));
     }
 
-
+    // Helper method to convert Color to hex string
     private static String toHex(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
@@ -144,16 +144,16 @@ public class ColorConfig {
                 (int) (color.getBlue() * 255));
     }
 
-
+    // Helper method to calculate a darker color
     private static Color calculateDarkerColor(Color color, double factor) {
         if (color.equals(Color.BLACK)) {
-            return Color.BLACK; 
+            return Color.BLACK; // If background is black, the top bar remains black
         }
         return new Color(
                 Math.max(color.getRed() * factor, 0),
                 Math.max(color.getGreen() * factor, 0),
                 Math.max(color.getBlue() * factor, 0),
-                color.getOpacity() 
+                color.getOpacity() // Preserve opacity
         );
     }
 }

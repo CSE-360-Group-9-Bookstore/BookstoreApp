@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ColorConfig {
 
-    private static final int selectedScheme = 1; 
+    private static final int selectedScheme = 1; /
 
     public static class ColorScheme {
         public final Color background;
@@ -28,7 +28,7 @@ public class ColorConfig {
             this.textFieldText = textFieldText;
             this.textFieldPromptText = textFieldPromptText;
             this.additionalText = additionalText;
-            this.topBar = calculateDarkerColor(background, 0.9); 
+            this.topBar = calculateDarkerColor(background, 0.9); // 10% darker
         }
     }
 
@@ -94,7 +94,7 @@ public class ColorConfig {
 
 
     private static ColorScheme getCurrentScheme() {
-        return colorSchemes.getOrDefault(selectedScheme, colorSchemes.get(1)); 
+        return colorSchemes.getOrDefault(selectedScheme, colorSchemes.get(1)); // Default to Scheme 1
     }
 
 

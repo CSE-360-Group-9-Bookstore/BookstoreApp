@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class Users {
 
+    // Database connection details
     private static final String DB_URL = "jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres";
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
@@ -46,7 +47,8 @@ public class Users {
             String role = authResult;
             String query = "SELECT id, created_at FROM \"Users\" WHERE username = ?";
 
-            try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);PreparedStatement stmt = conn.prepareStatement(query)) {
+            try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, username);
                 ResultSet rs = stmt.executeQuery();
 
@@ -68,10 +70,18 @@ public class Users {
             }
         }
     }
+
+    /**
+     * Retrieves the password for a given username.
+     *
+     * @param username the username
+     * @return the password if username exists, or an error message
+     */
     public String forgotPassword(String username) {
         String query = "SELECT password FROM \"Users\" WHERE username = ?";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
@@ -88,22 +98,31 @@ public class Users {
             return "Error: Unable to retrieve password.";
         }
     }
+
+    /**
+     * Authenticates a user and returns role-specific information.
+     *
+     * @param username the username
+     * @param password the password
+     * @return a String array containing role-specific data or error messages
+     */
     public String[] authenticateUser(String username, String password) {
         String authResult = authenticate(username, password);
         if (authResult.startsWith("Error:")) {
-        
-            return new String[]{"error", authResult.substring(7)};
+            // Return an array with "error" and the error message
+            return new String[]{"error", authResult.substring(7)}; // Remove "Error: " prefix
         } else {
             String role = authResult;
 
             System.out.println("Role: " + role);
 
+            //strip all non-alphanumeric characters
             role = role.replaceAll("[^a-zA-Z0-9]", "");
 
 
 
 
-          
+            // Use a switch statement to return role-specific information
             switch (role.toLowerCase()) {
                 case "admin":
                     return new String[]{"testing", "page2"};
@@ -117,7 +136,14 @@ public class Users {
         }
     }
 
-   
+    /**
+     * Authenticates the user by verifying the username and password.
+     * Returns the user's role if successful, or an error message if not.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the role of the user, or an error message starting with "Error:"
+     */
     private String authenticate(String username, String password) {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             return "Error: Username and password must be provided.";
@@ -133,10 +159,10 @@ public class Users {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                
+                // Authentication successful
                 return rs.getString("role");
             } else {
-               
+                // Check if username exists
                 String checkUserQuery = "SELECT 1 FROM \"Users\" WHERE username = ?";
                 try (PreparedStatement checkStmt = conn.prepareStatement(checkUserQuery)) {
                     checkStmt.setString(1, username);
@@ -155,6 +181,6 @@ public class Users {
         }
     }
 
- 
+    // Additional methods can be added here if needed
 
 }

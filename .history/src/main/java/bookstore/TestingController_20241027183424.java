@@ -18,6 +18,7 @@ public class TestingController {
 
     @FXML
     private void initialize() {
+        // Any initialization code can go here
     }
 
     @FXML
@@ -25,7 +26,10 @@ public class TestingController {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
 
+        // Add name to database
         db.addName(firstName, lastName);
+
+        // Clear input fields
         firstNameField.clear();
         lastNameField.clear();
     }

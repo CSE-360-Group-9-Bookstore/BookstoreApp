@@ -111,7 +111,7 @@ public class Main extends Application {
         topBar.setStyle(ColorConfig.getTopBarStyle());
 
         for (String pageName : accessiblePages) {
-            final String currentPage = pageName;
+            final String currentPage = pageName; // Capture the pageName
             Button pageButton = createStyledButton(currentPage);
             pageButton.setOnAction(event -> {
                 loadCenterContent(currentPage);

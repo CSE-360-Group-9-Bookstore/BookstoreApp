@@ -26,6 +26,7 @@ public class TestingController {
         String lastName = lastNameField.getText();
 
         db.addName(firstName, lastName);
+
         firstNameField.clear();
         lastNameField.clear();
     }

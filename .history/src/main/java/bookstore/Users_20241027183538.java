@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class Users {
 
+    // Database connection details
     private static final String DB_URL = "jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres";
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
@@ -91,8 +92,8 @@ public class Users {
     public String[] authenticateUser(String username, String password) {
         String authResult = authenticate(username, password);
         if (authResult.startsWith("Error:")) {
-        
-            return new String[]{"error", authResult.substring(7)};
+            // Return an array with "error" and the error message
+            return new String[]{"error", authResult.substring(7)}; // Remove "Error: " prefix
         } else {
             String role = authResult;
 
@@ -117,7 +118,14 @@ public class Users {
         }
     }
 
-   
+    /**
+     * Authenticates the user by verifying the username and password.
+     * Returns the user's role if successful, or an error message if not.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the role of the user, or an error message starting with "Error:"
+     */
     private String authenticate(String username, String password) {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             return "Error: Username and password must be provided.";
@@ -133,10 +141,10 @@ public class Users {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                
+                // Authentication successful
                 return rs.getString("role");
             } else {
-               
+                // Check if username exists
                 String checkUserQuery = "SELECT 1 FROM \"Users\" WHERE username = ?";
                 try (PreparedStatement checkStmt = conn.prepareStatement(checkUserQuery)) {
                     checkStmt.setString(1, username);
@@ -155,6 +163,6 @@ public class Users {
         }
     }
 
- 
+    // Additional methods can be added here if needed
 
 }

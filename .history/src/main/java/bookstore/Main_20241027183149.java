@@ -22,7 +22,7 @@ import javafx.fxml.FXMLLoader;
 import java.net.URL;
 import java.util.*;
 
-public class Main extends Application {
+public class Main extends Application {s
     private static final Font FONT = Font.font("Arial", 14);
     private static final Font WELCOME_FONT = Font.font("Arial", 20);
 
@@ -111,7 +111,7 @@ public class Main extends Application {
         topBar.setStyle(ColorConfig.getTopBarStyle());
 
         for (String pageName : accessiblePages) {
-            final String currentPage = pageName;
+            final String currentPage = pageName; // Capture the pageName
             Button pageButton = createStyledButton(currentPage);
             pageButton.setOnAction(event -> {
                 loadCenterContent(currentPage);

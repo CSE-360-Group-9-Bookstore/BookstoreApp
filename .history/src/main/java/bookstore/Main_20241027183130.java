@@ -23,27 +23,34 @@ import java.net.URL;
 import java.util.*;
 
 public class Main extends Application {
+
+    // Font for UI components
     private static final Font FONT = Font.font("Arial", 14);
     private static final Font WELCOME_FONT = Font.font("Arial", 20);
 
     private Scene loginScene;
     private Scene mainScene;
     private BorderPane mainLayout;
-    private Stage primaryStage;
+    private Stage primaryStage; // Keep a reference to the primaryStage
+
+    // Map of page names to FXML files
     private static final Map<String, String> pageMap = new HashMap<>();
     static {
         pageMap.put("testing", "testing.fxml");
         pageMap.put("page2", "page2.fxml");
+        // Add new pages here
+        // Example: pageMap.put("newPage", "newPage.fxml");
     }
 
-    private List<String> accessiblePages;
-    private Users users;
-    private String loggedInUsername;
+    private List<String> accessiblePages; // List of pages accessible to the logged-in user
+    private Users users; // Declare Users instance at class level
+    private String loggedInUsername; // Store the logged-in username
 
     @Override
     public void start(Stage primaryStage) {
-        users = new Users();
-        this.primaryStage = primaryStage;
+        users = new Users(); // Initialize Users instance
+
+        this.primaryStage = primaryStage; // Assign the primaryStage
         primaryStage.setTitle("Login");
 
         loginScene = createLoginScene();
@@ -111,7 +118,7 @@ public class Main extends Application {
         topBar.setStyle(ColorConfig.getTopBarStyle());
 
         for (String pageName : accessiblePages) {
-            final String currentPage = pageName;
+            final String currentPage = pageName; // Capture the pageName
             Button pageButton = createStyledButton(currentPage);
             pageButton.setOnAction(event -> {
                 loadCenterContent(currentPage);
