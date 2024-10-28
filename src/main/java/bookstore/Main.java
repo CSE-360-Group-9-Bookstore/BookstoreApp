@@ -59,7 +59,10 @@ public class Main extends Application {
         usernameField.setText("admin");
         passwordField.setText("password");
         Button submitButton = createStyledButton("Login");
-        Label additionalText = new Label("Enter your username and password.");
+        Label additionalText = new Label("Enter your username and password." +
+                "\n Testing Account: " +
+                "\n Username: rohan (case sensitive)" +
+                "\n Password: password (case sensitive)");
         additionalText.setTextFill(ColorConfig.ADDITIONAL_TEXT);
         submitButton.setOnAction(event -> {
             submitButton.setText("Logging you in...");
