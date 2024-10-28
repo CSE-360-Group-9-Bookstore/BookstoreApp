@@ -1,3 +1,6 @@
+# `To Run: mvn clean javafx:run  or  ./runApp.sh`
+---------------------------------
+
 # Bookstore JavaFX Application
 
 This is a simple JavaFX-based bookstore application. It contains a login page with hardcoded credentials for quick access during development, as well as buttons to navigate between different pages loaded via FXML files.
