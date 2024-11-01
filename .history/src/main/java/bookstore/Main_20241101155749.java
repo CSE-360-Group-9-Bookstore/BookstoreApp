@@ -83,7 +83,7 @@ public class Main extends Application {
                 alert.showAndWait();
             } else {
                 client.username = username;
-                client.role = result;
+                client.role = role;
                 createMainLayout();
                 primaryStage.setScene(mainScene);
             }

@@ -39,7 +39,7 @@ public class Main extends Application {
     }
    
     private Users users;
-    private User client = new User("","");
+    private User client;
 
     @Override
     public void start(Stage primaryStage) {
@@ -70,20 +70,19 @@ public class Main extends Application {
             submitButton.setDisable(true);
             String username = usernameField.getText();
             String password = passwordField.getText();
-            String result = users.authenticateUser(username, password);
-            
+            String[] result = users.authenticateUser(username, password);
             submitButton.setText("Login");
             submitButton.setDisable(false);
 
-            if ("error".equals(result)) {
+            if ("error".equals(result[0])) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Login Failed");
                 alert.setHeaderText(null);
-                alert.setContentText(result);
+                alert.setContentText(result[1]);
                 alert.showAndWait();
             } else {
                 client.username = username;
-                client.role = result;
+
                 createMainLayout();
                 primaryStage.setScene(mainScene);
             }
@@ -104,11 +103,9 @@ public class Main extends Application {
         mainLayout.setTop(topBar);
         mainLayout.setStyle(ColorConfig.getBackgroundStyle());
 
-        //if (!accessiblePages.isEmpty()) ;
-        System.out.println("PG: " + client.role);
-            loadCenterContent(client.role);
-            
-        //}
+        if (!accessiblePages.isEmpty()) {
+            loadCenterContent(accessiblePages.get(0));
+        }
         mainScene = new Scene(mainLayout, 900 * 1.38, 550 * 1.38);
     }
 
@@ -132,14 +129,14 @@ public class Main extends Application {
         HBox.setHgrow(rightSpacer, Priority.ALWAYS);
         topBar.getChildren().add(leftSpacer);
 
-        Label welcomeLabel = new Label("Welcome, " + client.username + "!");
+        Label welcomeLabel = new Label("Welcome, " + loggedInUsername + "!");
         welcomeLabel.setFont(WELCOME_FONT);
         welcomeLabel.setStyle("-fx-font-weight: bold;");
         welcomeLabel.setTextFill(Color.web("#FFFFFF"));
         topBar.getChildren().add(welcomeLabel);
         topBar.getChildren().add(rightSpacer);
 
-        Button backToLoginButton = createStyledButton("Change User (Current: " + client.username + ")");
+        Button backToLoginButton = createStyledButton("Change User (Current: " + loggedInUsername + ")");
         backToLoginButton.setOnAction(event -> {
             primaryStage.setScene(loginScene);
         });
@@ -150,7 +147,6 @@ public class Main extends Application {
 
     private void loadCenterContent(String pageName) {
         try {
-            System.out.println(pageName);
             String fxmlFile = pageMap.get(pageName);
             if (fxmlFile == null) {
                 throw new RuntimeException("No FXML file mapped for page: " + pageName);

@@ -88,7 +88,7 @@ public class Users {
             return "Error: Unable to retrieve password.";
         }
     }
-    public String[] authenticateUser(String username, String password) {
+    public String authenticateUser(String username, String password) {
         String authResult = authenticate(username, password);
         if (authResult.startsWith("Error:")) {
         
@@ -103,21 +103,10 @@ public class Users {
 
 
 
-          
-            switch (role.toLowerCase()) {
-                case "admin":
-                    return new String[]{"testing", "page2"};
-                case "buyer":
-                    return new String[]{"testing"};
-                case "seller":
-                    return new String[]{"page2"};
-                default:
-                    return new String[]{"error", "Unknown role."};
+            return role;
             }
         }
     }
-
-   
     private String authenticate(String username, String password) {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             return "Error: Username and password must be provided.";
@@ -154,7 +143,5 @@ public class Users {
             return "Error: Unable to authenticate.";
         }
     }
-
- 
 
 }

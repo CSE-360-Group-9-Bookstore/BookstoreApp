@@ -39,7 +39,7 @@ public class Main extends Application {
     }
    
     private Users users;
-    private User client = new User("","");
+    private User client;
 
     @Override
     public void start(Stage primaryStage) {
@@ -71,7 +71,6 @@ public class Main extends Application {
             String username = usernameField.getText();
             String password = passwordField.getText();
             String result = users.authenticateUser(username, password);
-            
             submitButton.setText("Login");
             submitButton.setDisable(false);
 
@@ -79,11 +78,11 @@ public class Main extends Application {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Login Failed");
                 alert.setHeaderText(null);
-                alert.setContentText(result);
+                alert.setContentText(r);
                 alert.showAndWait();
             } else {
                 client.username = username;
-                client.role = result;
+
                 createMainLayout();
                 primaryStage.setScene(mainScene);
             }
@@ -104,10 +103,8 @@ public class Main extends Application {
         mainLayout.setTop(topBar);
         mainLayout.setStyle(ColorConfig.getBackgroundStyle());
 
-        //if (!accessiblePages.isEmpty()) ;
-        System.out.println("PG: " + client.role);
-            loadCenterContent(client.role);
-            
+        //if (!accessiblePages.isEmpty()) {
+            loadCenterContent(pageMap.get(client.role));
         //}
         mainScene = new Scene(mainLayout, 900 * 1.38, 550 * 1.38);
     }
@@ -150,7 +147,6 @@ public class Main extends Application {
 
     private void loadCenterContent(String pageName) {
         try {
-            System.out.println(pageName);
             String fxmlFile = pageMap.get(pageName);
             if (fxmlFile == null) {
                 throw new RuntimeException("No FXML file mapped for page: " + pageName);

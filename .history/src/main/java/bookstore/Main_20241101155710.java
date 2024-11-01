@@ -71,7 +71,7 @@ public class Main extends Application {
             String username = usernameField.getText();
             String password = passwordField.getText();
             String result = users.authenticateUser(username, password);
-            
+            System.out.println("RES: " +result);
             submitButton.setText("Login");
             submitButton.setDisable(false);
 
@@ -83,7 +83,7 @@ public class Main extends Application {
                 alert.showAndWait();
             } else {
                 client.username = username;
-                client.role = result;
+
                 createMainLayout();
                 primaryStage.setScene(mainScene);
             }
@@ -105,7 +105,7 @@ public class Main extends Application {
         mainLayout.setStyle(ColorConfig.getBackgroundStyle());
 
         //if (!accessiblePages.isEmpty()) ;
-        System.out.println("PG: " + client.role);
+        System.out.println()
             loadCenterContent(client.role);
             
         //}
