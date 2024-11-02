@@ -18,9 +18,5 @@ public class Book {
         this.condition = condition;
         this.genre = genre;
     }
-
-    public boolean editBook(String title, String author, double price, int isbn10, int isbn13, String condition,
-            String genre) {
-        return true;
-    }
+    public boolean editBook
 }

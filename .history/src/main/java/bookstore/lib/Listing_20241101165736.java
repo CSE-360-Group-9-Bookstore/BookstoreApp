@@ -1,9 +1,7 @@
 package bookstore.lib;
 
-import java.util.UUID;
-
 public class Listing {
-    public UUID uuid;
+    private String uuid;
     public Book book;
     public User seller;
     public String status;
@@ -14,7 +12,6 @@ public class Listing {
         this.seller = seller;
         this.status = "available";
         this.price = book.price;
-        this.uuid = UUID.randomUUID();
     }
 
     public boolean sellListing(User buyer) {
@@ -31,13 +28,6 @@ public class Listing {
             return true;
         }
         return false;
-    }
-
-    public void editListing(Book book) {
-        if (this.status.equals("available")) {
-            this.book = book;
-            this.price = book.price;
-        }
     }
 
 }

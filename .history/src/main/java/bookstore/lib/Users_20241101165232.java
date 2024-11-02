@@ -38,7 +38,36 @@ public class Users {
             return "Error: Unable to add user.";
         }
     }
-    
+    public String login(String username, String password) {
+        String authResult = authenticate(username, password);
+        if (authResult.startsWith("Error:")) {
+            return authResult;
+        } else {
+            String role = authResult;
+            String query = "SELECT id, created_at FROM \"Users\" WHERE username = ?";
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, username);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    UUID id = (UUID) rs.getObject("id");
+                    Timestamp createdAt = rs.getTimestamp("created_at");
+
+                    return "Login successful. User Info:\n" +
+                            "ID: " + id + "\n" +
+                            "Created At: " + createdAt + "\n" +
+                            "Role: " + role;
+                } else {
+                    return "Error: Unable to retrieve user info.";
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Error: Unable to login.";
+            }
+        }
+    }
     public String forgotPassword(String username) {
         String query = "SELECT password FROM \"Users\" WHERE username = ?";
 

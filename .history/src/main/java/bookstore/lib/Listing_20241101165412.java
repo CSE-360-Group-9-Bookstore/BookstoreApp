@@ -1,0 +1,6 @@
+package bookstore.lib;
+
+public class Listing {
+    private String uuid;
+    
+}

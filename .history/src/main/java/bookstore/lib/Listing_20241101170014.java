@@ -3,7 +3,7 @@ package bookstore.lib;
 import java.util.UUID;
 
 public class Listing {
-    public UUID uuid;
+    private UUID uuid;
     public Book book;
     public User seller;
     public String status;
