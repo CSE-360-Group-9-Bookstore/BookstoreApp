@@ -155,6 +155,7 @@ public class Main extends Application {
             if (fxmlFile == null) {
                 throw new RuntimeException("No FXML file mapped for page: " + pageName);
             }
+            System.out.println("Loading FXML: " + fxmlFile);
             URL resourceURL = getClass().getResource("/" + fxmlFile);
             System.out.println("Loading FXML from: " + resourceURL);
             if (resourceURL == null) {
