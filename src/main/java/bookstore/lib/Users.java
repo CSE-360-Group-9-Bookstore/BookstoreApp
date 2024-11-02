@@ -108,6 +108,7 @@ public class Users {
             
         }
     }
+
     private String authenticate(String username, String password) {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             return "Error: Username and password must be provided.";
