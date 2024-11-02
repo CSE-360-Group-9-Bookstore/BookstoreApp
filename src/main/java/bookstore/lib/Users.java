@@ -38,7 +38,7 @@ public class Users {
             return "Error: Unable to add user.";
         }
     }
-    
+
     public String forgotPassword(String username) {
         String query = "SELECT password FROM \"Users\" WHERE username = ?";
 
@@ -62,7 +62,7 @@ public class Users {
     public String authenticateUser(String username, String password) {
         String authResult = authenticate(username, password);
         if (authResult.startsWith("Error:")) {
-        
+
             return "error";
         } else {
             String role = authResult;
@@ -76,7 +76,7 @@ public class Users {
 
             if(!("admin".equals(role)) &&!(role.equals("buyer"))&&!(role.equals("seller"))){role = "error";}
             return role;
-            
+
         }
     }
 
@@ -95,10 +95,10 @@ public class Users {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                
+
                 return rs.getString("role");
             } else {
-               
+
                 String checkUserQuery = "SELECT 1 FROM \"Users\" WHERE username = ?";
                 try (PreparedStatement checkStmt = conn.prepareStatement(checkUserQuery)) {
                     checkStmt.setString(1, username);
