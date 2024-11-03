@@ -14,7 +14,7 @@ public class AdminController {
 
     @FXML
     private void initialize() {
-        messageLabel.setText("Welcome to Page 2!");
+        messageLabel.setText("Welcome to Page 2!, this is the admin page");
     }
 
     @FXML
