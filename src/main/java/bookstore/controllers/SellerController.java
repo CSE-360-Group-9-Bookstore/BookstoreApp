@@ -21,6 +21,7 @@ public class SellerController {
 
     @FXML
     private void initialize() {
+
         // Define filter parameters
         List<String> genres = Arrays.asList("Hardcover"); // Example genres to filter
         List<String> conditions = Arrays.asList("New"); // Example types to filter
