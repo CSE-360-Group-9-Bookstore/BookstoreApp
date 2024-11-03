@@ -9,9 +9,10 @@ import java.util.UUID;
 
 public class BuyerController {
 
+
     Listings listings = new Listings();
 
-    // Use Listings.Listing to refer to the inner class Listing
+    //testing DB connections
     Listings.Listing firstBook = listings.getListingInfo(UUID.fromString("2321ec8a-0b23-4740-87e3-02f2255b3789"));
 
     String bookTitle = firstBook.bookTitle;
@@ -24,6 +25,8 @@ public class BuyerController {
 
     @FXML
     private void initialize() {
+        //sample message testing database connections
+
         messageLabel.setText("Welcome to Page 2!, the name of the first book in the database is " + bookTitle);
     }
 
