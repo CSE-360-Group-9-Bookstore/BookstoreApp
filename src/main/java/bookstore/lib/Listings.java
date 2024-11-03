@@ -1,4 +1,6 @@
 package bookstore.lib;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -133,5 +135,40 @@ public class Listings {
             e.printStackTrace();
             return "Error: Unable to delete listing.";
         }
+    }
+
+    public Map<UUID, Listing> getAll() {
+        String query = "SELECT * FROM \"Listings\"";
+        Map<UUID, Listing> listingsMap = new HashMap<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                UUID listingUUID = UUID.fromString(rs.getString("Listing_UUID"));
+                Listing listing = new Listing(
+                        listingUUID,
+                        rs.getString("book_title"),
+                        rs.getString("author"),
+                        rs.getString("description"),
+                        rs.getLong("ISBN-10"),
+                        rs.getLong("ISBN-13"),
+                        rs.getString("type"),
+                        rs.getString("condition"),
+                        rs.getDouble("buy_price"),
+                        rs.getDouble("sell_price"),
+                        UUID.fromString(rs.getString("sellerUUID")),
+                        rs.getInt("quantity")
+                );
+                listingsMap.put(listingUUID, listing);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error: Unable to retrieve listings.");
+        }
+
+        return listingsMap;
     }
 }
