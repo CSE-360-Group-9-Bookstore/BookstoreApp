@@ -14,7 +14,7 @@ public class SellerController {
 
     @FXML
     private void initialize() {
-        messageLabel.setText("Welcome to Page 2!");
+        messageLabel.setText("Welcome to Page 2!, this is the seller name");
     }
 
     @FXML
