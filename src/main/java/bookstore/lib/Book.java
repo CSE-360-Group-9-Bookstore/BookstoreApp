@@ -23,4 +23,8 @@ public class Book {
             String genre) {
         return true;
     }
+
+    public boolean dummyfunction() {
+        return true;
+    }
 }
