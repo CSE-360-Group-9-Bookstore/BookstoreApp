@@ -136,6 +136,44 @@ public class Listings {
         }
     }
 
+        public String purchaseBook(UUID listingUUID) {
+            // Query to update the quantity
+            String updateQuery = "UPDATE \"Listings\" SET quantity = quantity - 1 WHERE \"Listing_UUID\" = ? AND quantity > 0";
+            // Query to delete the listing if quantity reaches 0
+            String deleteQuery = "DELETE FROM \"Listings\" WHERE \"Listing_UUID\" = ?";
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
+
+                // First, try to update the quantity
+                try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+                    stmt.setObject(1, listingUUID);
+
+                    System.out.println("Executing update: " + stmt.toString());
+                    int rowsAffected = stmt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        System.out.println("Quantity updated successfully.");
+                        return "Success: Book purchased. Quantity updated.";
+                    } else {
+                        // If the quantity is 0, delete the listing
+                        System.out.println("No rows affected, attempting to delete listing.");
+                        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery)) {
+                            deleteStmt.setObject(1, listingUUID);
+                            deleteStmt.executeUpdate();
+                            return "Error: Stock is 0, book listing deleted.";
+                        }
+                    }
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Error: Unable to process purchase.";
+            }
+        }
+
+
+
+
     public Map<UUID, Listing> getAll() {
         String query = "SELECT * FROM \"Listings\"";
         Map<UUID, Listing> listingsMap = new HashMap<>();
