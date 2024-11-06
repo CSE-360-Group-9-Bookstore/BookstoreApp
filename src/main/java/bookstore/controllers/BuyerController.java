@@ -6,6 +6,7 @@ import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import bookstore.lib.Listings;
+import bookstore.lib.Logs;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,13 +54,18 @@ public class BuyerController {
         if (selectedUUID != null) {
             // Trigger the purchase logic
             String result = listings.purchaseBook(selectedUUID);
-            messageLabel.setText(result);
 
             // Re-fetch the listings and update ListView to reflect changes
             allListings = listings.getAll();
             updateListView();
-            // Display details after purchase
-            displayListingDetails(selectedUUID);
+
+            // Display purchase confirmation message with book name and remaining stock
+            Listings.Listing listing = allListings.get(selectedUUID);
+            String confirmationMessage = String.format("You bought '%s'. Remaining stock: %d.", listing.bookTitle, listing.quantity);
+            messageLabel.setText(confirmationMessage);
+
+            // Log the transaction after purchase
+            Logs.logPurchase(listing.listingUUID, listing.sellerUUID, listing.sellPrice, listing.buyPrice, listing.bookTitle);
         } else {
             messageLabel.setText("Error: No book selected.");
         }
