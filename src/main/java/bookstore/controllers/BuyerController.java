@@ -1,6 +1,7 @@
 package bookstore.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
@@ -24,6 +25,12 @@ public class BuyerController {
     private ListView<String> listingIdList;
 
     @FXML
+    private ComboBox<String> genreCB;
+
+    @FXML
+    private ComboBox<String> conCB;
+
+    @FXML
     private void initialize() {
         // Fetch all listings and add book title with sell price to the ListView
         Map<UUID, Listings.Listing> allListings = listings.getAll();
@@ -38,6 +45,17 @@ public class BuyerController {
         // Populate ListView with book titles and prices
         listingIdList.setItems(listingDisplayItems);
 
+        //genres get put in combo box hopefully.
+        ObservableList<String> genres = FXCollections.observableArrayList(
+                "Natural Science Books", "Computer Books", "Math Books", "English Language Books", "Other Books"
+        );
+        //sets the items above into the box hopefullty
+        genreCB.setItems(genres);
+
+        ObservableList<String> condition = FXCollections.observableArrayList(
+                "Used Like New", "Moderately Used", "Heavily Used"
+        );
+        conCB.setItems(condition);
         // Add a click listener to display all details for the selected listing
         listingIdList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
