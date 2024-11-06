@@ -3,10 +3,9 @@ package bookstore.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Button;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import bookstore.lib.*;
+import bookstore.lib.Listings;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,9 +18,6 @@ public class BuyerController {
     private Label messageLabel;
 
     @FXML
-    private Button randomButton;
-
-    @FXML
     private ListView<String> listingIdList;
 
     @FXML
@@ -29,6 +25,13 @@ public class BuyerController {
         // Fetch all listings and add book title with sell price to the ListView
         allListings = listings.getAll();
         updateListView();
+
+        // Add a click listener to display all details for the selected listing
+        listingIdList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                displayListingDetails(getSelectedListingUUID());
+            }
+        });
     }
 
     // Method to update the ListView after purchase or changes
@@ -55,6 +58,8 @@ public class BuyerController {
             // Re-fetch the listings and update ListView to reflect changes
             allListings = listings.getAll();
             updateListView();
+            // Display details after purchase
+            displayListingDetails(selectedUUID);
         } else {
             messageLabel.setText("Error: No book selected.");
         }
@@ -73,5 +78,25 @@ public class BuyerController {
                     .orElse(null);
         }
         return null;
+    }
+
+    // Method to display detailed listing information
+    private void displayListingDetails(UUID listingUUID) {
+        Listings.Listing selectedListing = allListings.get(listingUUID);
+        if (selectedListing != null) {
+            String listingDetails = "Book Title: " + selectedListing.bookTitle + "\n" +
+                    "Author: " + selectedListing.author + "\n" +
+                    "Description: " + selectedListing.description + "\n" +
+                    "ISBN-10: " + selectedListing.ISBN10 + "\n" +
+                    "ISBN-13: " + selectedListing.ISBN13 + "\n" +
+                    "Genre: " + selectedListing.genre + "\n" +
+                    "Condition: " + selectedListing.condition + "\n" +
+                    "Buy Price: $" + selectedListing.buyPrice + "\n" +
+                    "Sell Price: $" + selectedListing.sellPrice + "\n" +
+                    "Seller ID: " + selectedListing.sellerUUID + "\n" +
+                    "Quantity: " + selectedListing.quantity + "\n" +
+                    "Status: " + selectedListing.status;
+            messageLabel.setText(listingDetails);
+        }
     }
 }
