@@ -23,11 +23,11 @@ public class BuyerController {
 
     @FXML
     private void initialize() {
-        // Fetch all listings and add book title with sell price to the ListView
-        allListings = listings.getAll();
-        updateListView();
+        // Fetch all listings initially and load them into the ListView
+        allListings = fetchAllListings();
+        refreshListingView();
 
-        // Add a click listener to display all details for the selected listing
+        // Listener to display details when a listing is selected
         listingIdList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 displayListingDetails(getSelectedListingUUID());
@@ -35,47 +35,63 @@ public class BuyerController {
         });
     }
 
-    // Method to update the ListView after purchase or changes
-    private void updateListView() {
+    // Fetch all listings from the database
+    private Map<UUID, Listings.Listing> fetchAllListings() {
+        Map<UUID, Listings.Listing> updatedListings = listings.getAll();
+        System.out.println("Fetched listings: " + updatedListings); // Debugging output
+        return updatedListings;
+    }
+
+    // Refresh ListView based on the latest state of allListings
+    private void refreshListingView() {
         ObservableList<String> listingDisplayItems = FXCollections.observableArrayList();
         for (Map.Entry<UUID, Listings.Listing> entry : allListings.entrySet()) {
             Listings.Listing listing = entry.getValue();
             String displayText = listing.bookTitle + " - $" + listing.sellPrice + " - Stock: " + listing.quantity;
             listingDisplayItems.add(displayText);
         }
+        System.out.println("Updated ListView items: " + listingDisplayItems); // Debug output
         listingIdList.setItems(listingDisplayItems);
+        listingIdList.refresh(); // Force refresh to ensure UI updates
     }
 
     @FXML
-    private void handleRandomAction() {
-        // Get the selected UUID from the ListView (assumes ListView displays book titles with prices)
+    private void handlePurchase() {
+        // Get the selected UUID from the ListView
         UUID selectedUUID = getSelectedListingUUID();
 
         if (selectedUUID != null) {
-            // Trigger the purchase logic
-            String result = listings.purchaseBook(selectedUUID);
+            // Attempt the purchase action
+            listings.purchaseBook(selectedUUID);
 
-            // Re-fetch the listings and update ListView to reflect changes
-            allListings = listings.getAll();
-            updateListView();
+            // Re-fetch the listings to reflect changes and update the ListView
+            allListings = fetchAllListings(); // Fetch updated listings
+            refreshListingView(); // Refresh the ListView
 
-            // Display purchase confirmation message with book name and remaining stock
+            // Check if the listing still exists after re-fetching
             Listings.Listing listing = allListings.get(selectedUUID);
-            String confirmationMessage = String.format("You bought '%s'. Remaining stock: %d.", listing.bookTitle, listing.quantity);
-            messageLabel.setText(confirmationMessage);
+            if (listing != null) {
+                // Display confirmation with book name and remaining stock
+                String confirmationMessage = String.format("You bought '%s'. Remaining stock: %d.", listing.bookTitle, listing.quantity);
+                messageLabel.setText(confirmationMessage);
+            } else {
+                // If listing was removed due to zero stock
+                messageLabel.setText("The selected book is now out of stock and has been removed.");
+            }
 
-            // Log the transaction after purchase
-            Logs.logPurchase(listing.listingUUID, listing.sellerUUID, listing.sellPrice, listing.buyPrice, listing.bookTitle);
+            // Log the transaction if the listing still exists
+            if (listing != null) {
+                Logs.logPurchase(listing.listingUUID, listing.sellerUUID, listing.sellPrice, listing.buyPrice, listing.bookTitle);
+            }
         } else {
             messageLabel.setText("Error: No book selected.");
         }
     }
 
-    // Helper method to get the selected listing's UUID from ListView (extract UUID based on the title)
+    // Helper method to get the selected listing's UUID from ListView
     private UUID getSelectedListingUUID() {
         String selectedItem = listingIdList.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            // Extract the book title and match it with the listing in the system
             String title = selectedItem.split(" - ")[0];
             return allListings.values().stream()
                     .filter(listing -> listing.bookTitle.equals(title))
@@ -86,7 +102,7 @@ public class BuyerController {
         return null;
     }
 
-    // Method to display detailed listing information
+    // Display detailed information for the selected listing
     private void displayListingDetails(UUID listingUUID) {
         Listings.Listing selectedListing = allListings.get(listingUUID);
         if (selectedListing != null) {
