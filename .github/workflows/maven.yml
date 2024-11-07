@@ -30,7 +30,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Compile App
-      run: mvn clean jpro:run
+      run: mvn clean jpro:release
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
