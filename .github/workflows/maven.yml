@@ -31,8 +31,16 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Compile App
       run: mvn clean jpro:release
+    - name: Unzip JPro Web Application
+      run: unzip -o ./target/BookStore-jpro.zip -d ./target/jpro/app
+    - name: List Unzipped Directory
+      run: ls -la ./target/jpro/app 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./target/jpro/app
+         run: mvn -B package --file pom.xml
+
+
+
