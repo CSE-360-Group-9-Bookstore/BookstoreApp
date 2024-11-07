@@ -34,7 +34,7 @@ jobs:
     - name: Compile App
       run: mvn clean jpro:release
     - name: Unzip JPro Web Application
-      run: unzip -o ./target/BookStore-jpro.zip -d ./target/jpro/app/BookStore-jpro
+      run: unzip -o ./target/BookStore-jpro.zip -d ./target/jpro/app
     - name: List Unzipped Directory
       run: ls -la ./target/jpro/app
     - name: Deploy to GitHub Pages
