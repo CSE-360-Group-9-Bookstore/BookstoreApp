@@ -8,9 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import bookstore.lib.Listings;
 import bookstore.lib.Logs;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Arrays;
+import java.util.List;
+import java.util.HashMap; // Add this import
+
 
 public class BuyerController {
 
@@ -42,11 +45,34 @@ public class BuyerController {
         });
     }
 
-    // Fetch all listings from the database
+    // Fetch all listings with optional filtering
     private Map<UUID, Listings.Listing> fetchAllListings() {
-        Map<UUID, Listings.Listing> updatedListings = listings.getAll();
-        System.out.println("Fetched listings: " + updatedListings); // Debugging output
-        return updatedListings;
+        // Define default filter parameters (null or empty for no filtering)
+        List<String> genres = null; // Example: Arrays.asList("Hardcover");
+        List<String> conditions = null; // Example: Arrays.asList("New");
+        Double minSellPrice = null; // Minimum sell price
+        Double maxSellPrice = null; // Maximum sell price
+        String search = "Harper"; // Search keyword
+
+        // Additional filter parameters for ISBN-10, ISBN-13, and sellerID
+        Long isbn10 = null;
+        Long isbn13 = null;
+        UUID sellerID = null;
+
+        // Call filterAll with the defined parameters
+        Map<UUID, Listings.Listing> filteredListings = listings.filterAll(
+                genres,
+                conditions,
+                minSellPrice,
+                maxSellPrice,
+                search,
+                isbn10,
+                isbn13,
+                sellerID
+        );
+
+        System.out.println("Fetched listings with filters: " + filteredListings); // Debugging output
+        return filteredListings;
     }
 
     // Refresh ListView based on the latest state of allListings
