@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font; 
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -37,9 +37,9 @@ public class Main extends Application {
         pageMap.put("seller", "sellerLanding.fxml");
         pageMap.put("admin", "adminLanding.fxml");
     }
-   
+
     private Users users;
-    private User client = new User("","");
+    private User client;
 
     @Override
     public void start(Stage primaryStage) {
@@ -70,20 +70,31 @@ public class Main extends Application {
             submitButton.setDisable(true);
             String username = usernameField.getText();
             String password = passwordField.getText();
-            String result = users.authenticateUser(username, password);
-            
+            User authenticatedUser = users.authenticateUser(username, password);
+
             submitButton.setText("Login");
             submitButton.setDisable(false);
 
-            if ("error".equals(result)) {
+            if (authenticatedUser == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Login Failed");
                 alert.setHeaderText(null);
-                alert.setContentText(result);
+                alert.setContentText("Invalid username or password.");
                 alert.showAndWait();
             } else {
-                client.username = username;
-                client.role = result;
+                // Set the current user in the Session singleton
+                Session.getInstance().setUser(authenticatedUser);
+                client = authenticatedUser;
+
+                // Optional, if you still use 'client' locally
+
+                //print all things in client
+                System.out.println("Client: " + client);
+                System.out.println("Client: " + client.username);
+                System.out.println("Client Role: " + client.role);
+                System.out.println("Client Password: " + client.password);
+                System.out.println("Client UUID: " + client.user_uuid);
+
                 createMainLayout();
                 primaryStage.setScene(mainScene);
             }
@@ -104,11 +115,9 @@ public class Main extends Application {
         mainLayout.setTop(topBar);
         mainLayout.setStyle(ColorConfig.getBackgroundStyle());
 
-        //if (!accessiblePages.isEmpty()) ;
         System.out.println("PG: " + client.role);
-            loadCenterContent(client.role);
-            
-        //}
+        loadCenterContent(client.role);
+
         mainScene = new Scene(mainLayout, 900 * 1.38, 550 * 1.38);
     }
 
@@ -116,15 +125,6 @@ public class Main extends Application {
         HBox topBar = new HBox(10);
         topBar.setPadding(new Insets(10));
         topBar.setStyle(ColorConfig.getTopBarStyle());
-        /* 
-        for (String pageName : accessiblePages) {
-            final String currentPage = pageName;
-            Button pageButton = createStyledButton(currentPage);
-            pageButton.setOnAction(event -> {
-                loadCenterContent(currentPage);
-            });
-            topBar.getChildren().add(pageButton);
-        }*/
 
         Region leftSpacer = new Region();
         Region rightSpacer = new Region();
@@ -168,7 +168,6 @@ public class Main extends Application {
         }
     }
 
-
     private TextField createStyledTextField(String promptText) {
         TextField textField = new TextField();
         textField.setPromptText(promptText);
@@ -176,7 +175,6 @@ public class Main extends Application {
         textField.setFont(FONT);
         return textField;
     }
-
 
     private PasswordField createStyledPasswordField(String promptText) {
         PasswordField passwordField = new PasswordField();
@@ -186,15 +184,12 @@ public class Main extends Application {
         return passwordField;
     }
 
-
     private Button createStyledButton(String text) {
         Button button = new Button(text);
         button.setStyle(ColorConfig.getButtonStyle());
         button.setFont(FONT);
         return button;
     }
-
-   
 
     public static void main(String[] args) {
         launch(args);

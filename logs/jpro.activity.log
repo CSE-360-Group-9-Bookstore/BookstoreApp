@@ -1,0 +1,2 @@
+2024-11-07 00:17:25,287 [INFO] in scala-execution-context-global-32 - Starting the server
+2024-11-07 00:18:06,930 [INFO] in application-akka.actor.default-dispatcher-16 - Closing the server -> used memory: 43 MB  -  free system memory: 205 MB

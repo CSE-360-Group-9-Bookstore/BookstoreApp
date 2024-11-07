@@ -8,12 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import bookstore.lib.Listings;
 import bookstore.lib.Logs;
+import bookstore.lib.Session; // Import Session
+import bookstore.lib.User;    // Import User
 import java.util.Map;
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.List;
-import java.util.HashMap; // Add this import
-
+import java.util.HashMap;
 
 public class BuyerController {
 
@@ -48,11 +49,11 @@ public class BuyerController {
     // Fetch all listings with optional filtering
     private Map<UUID, Listings.Listing> fetchAllListings() {
         // Define default filter parameters (null or empty for no filtering)
-        List<String> genres = null; // Example: Arrays.asList("Hardcover");
-        List<String> conditions = null; // Example: Arrays.asList("New");
-        Double minSellPrice = null; // Minimum sell price
-        Double maxSellPrice = null; // Maximum sell price
-        String search = "Harper"; // Search keyword
+        List<String> genres = null;
+        List<String> conditions = null;
+        Double minSellPrice = null;
+        Double maxSellPrice = null;
+        String search = null;
 
         // Additional filter parameters for ISBN-10, ISBN-13, and sellerID
         Long isbn10 = null;
@@ -121,7 +122,18 @@ public class BuyerController {
 
             // Log the transaction if the listing still exists
             if (listing != null) {
-                Logs.logPurchase(listing.listingUUID, listing.sellerUUID, listing.sellPrice, listing.buyPrice, listing.bookTitle);
+                // Get the current user's UUID from the Session
+                User currentUser = Session.getInstance().getUser();
+                UUID buyerUUID = currentUser.user_uuid;
+
+                Logs.logPurchase(
+                        listing.listingUUID,
+                        buyerUUID,
+                        listing.sellerUUID,
+                        listing.sellPrice,
+                        listing.buyPrice,
+                        listing.bookTitle
+                );
             }
         } else {
             messageLabel.setText("Error: No book selected.");
