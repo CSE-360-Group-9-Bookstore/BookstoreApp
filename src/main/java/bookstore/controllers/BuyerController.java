@@ -1,6 +1,7 @@
 package bookstore.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
@@ -22,15 +23,19 @@ public class BuyerController {
     private ListView<String> listingIdList;
 
     @FXML
+    private Button buyButton; // Reference to the Buy button
+
+    @FXML
     private void initialize() {
         // Fetch all listings initially and load them into the ListView
         allListings = fetchAllListings();
         refreshListingView();
 
-        // Listener to display details when a listing is selected
+        // Listener to display details when a listing is selected and show the Buy button
         listingIdList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 displayListingDetails(getSelectedListingUUID());
+                buyButton.setVisible(true); // Show the button when a new item is selected
             }
         });
     }
@@ -78,6 +83,9 @@ public class BuyerController {
                 // If listing was removed due to zero stock
                 messageLabel.setText("The selected book is now out of stock and has been removed.");
             }
+
+            // Hide the Buy button after a purchase
+            buyButton.setVisible(false);
 
             // Log the transaction if the listing still exists
             if (listing != null) {
