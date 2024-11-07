@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import bookstore.lib.Listings;
 import bookstore.lib.Logs;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ public class BuyerController {
 
     Listings listings = new Listings();
     private Map<UUID, Listings.Listing> allListings;
+    private Map<String, UUID> displayTextToUUIDMap = new HashMap<>(); // Map for display text to UUID
 
     @FXML
     private Label messageLabel;
@@ -50,11 +52,15 @@ public class BuyerController {
     // Refresh ListView based on the latest state of allListings
     private void refreshListingView() {
         ObservableList<String> listingDisplayItems = FXCollections.observableArrayList();
+        displayTextToUUIDMap.clear(); // Clear the mapping before repopulating
+
         for (Map.Entry<UUID, Listings.Listing> entry : allListings.entrySet()) {
             Listings.Listing listing = entry.getValue();
             String displayText = listing.bookTitle + " - $" + listing.sellPrice + " - Stock: " + listing.quantity;
             listingDisplayItems.add(displayText);
+            displayTextToUUIDMap.put(displayText, listing.listingUUID); // Map display text to UUID
         }
+
         System.out.println("Updated ListView items: " + listingDisplayItems); // Debug output
         listingIdList.setItems(listingDisplayItems);
         listingIdList.refresh(); // Force refresh to ensure UI updates
@@ -99,15 +105,7 @@ public class BuyerController {
     // Helper method to get the selected listing's UUID from ListView
     private UUID getSelectedListingUUID() {
         String selectedItem = listingIdList.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            String title = selectedItem.split(" - ")[0];
-            return allListings.values().stream()
-                    .filter(listing -> listing.bookTitle.equals(title))
-                    .map(listing -> listing.listingUUID)
-                    .findFirst()
-                    .orElse(null);
-        }
-        return null;
+        return displayTextToUUIDMap.get(selectedItem); // Retrieve UUID from the map
     }
 
     // Display detailed information for the selected listing
