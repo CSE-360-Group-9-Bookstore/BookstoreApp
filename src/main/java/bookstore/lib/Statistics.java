@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -151,4 +155,69 @@ public class Statistics {
 
         return allSellerStats;
     }
+
+    /**
+     * Method to get daily statistics over the past 'days'.
+     *
+     * @param days The number of days back to query the sales logs.
+     * @return A list of maps containing total sales and total cost for each day.
+     */
+    public List<Map<String, Double>> getDailyStats(int days) {
+        String query = "SELECT DATE(created_at) as date, " +
+                "COALESCE(SUM(sell_price), 0) as totalSales, " +
+                "COALESCE(SUM(buy_price), 0) as totalCost " +
+                "FROM public.purchase_logs " +
+                "WHERE created_at >= ? " +
+                "GROUP BY DATE(created_at) " +
+                "ORDER BY DATE(created_at) DESC";
+
+        List<Map<String, Double>> dailyStats = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Calculate the start date
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -(days - 1));
+            java.sql.Date startDate = new java.sql.Date(cal.getTimeInMillis());
+
+            stmt.setDate(1, startDate);
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Create a map to store date-wise data
+            Map<String, Map<String, Double>> dateStatsMap = new HashMap<>();
+
+            while (rs.next()) {
+                String date = rs.getDate("date").toString();
+                Double totalSales = rs.getDouble("totalSales");
+                Double totalCost = rs.getDouble("totalCost");
+
+                Map<String, Double> stats = new HashMap<>();
+                stats.put("totalSales", totalSales);
+                stats.put("totalCost", totalCost);
+
+                dateStatsMap.put(date, stats);
+            }
+
+            // Prepare the list in order of days ago
+            for (int i = days - 1; i >= 0; i--) {
+                cal = Calendar.getInstance();
+                cal.add(Calendar.DAY_OF_MONTH, -i);
+                String date = new java.sql.Date(cal.getTimeInMillis()).toString();
+
+                Map<String, Double> stats = dateStatsMap.getOrDefault(date, new HashMap<>());
+                stats.putIfAbsent("totalSales", 0.0);
+                stats.putIfAbsent("totalCost", 0.0);
+
+                dailyStats.add(stats);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dailyStats;
+    }
+
 }

@@ -3,12 +3,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.chart.StackedBarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="bookstore.controllers.AdminController" alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
-    <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-    <Button fx:id="randomButton" text="Click Me!" onAction="#handleRandomAction" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
+    <Label fx:id="messageLabel" text="Welcome to the Admin Page!" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
+    <TextField fx:id="daysTextField" promptText="Enter number of days" style="-fx-background-color: #444; -fx-text-fill: white;"/>
+    <Button fx:id="enterButton" text="Enter" onAction="#handleEnterAction" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
+    <StackedBarChart fx:id="salesBarChart" style="-fx-background-color: #222;" prefHeight="400" prefWidth="600">
+        <xAxis>
+            <CategoryAxis fx:id="xAxis" label="Days Ago"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yAxis" label="Amount"/>
+        </yAxis>
+    </StackedBarChart>
 </VBox>
