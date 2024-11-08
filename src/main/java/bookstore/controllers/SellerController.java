@@ -21,7 +21,6 @@ public class SellerController {
 
     @FXML
     private void initialize() {
-
         // Get the current user's UUID from the Session
         User currentUser = Session.getInstance().getUser();
         UUID sellerUUID = currentUser.user_uuid;
@@ -29,11 +28,21 @@ public class SellerController {
         // Initialize Statistics and retrieve stats for the seller UUID
         Statistics stats = new Statistics();
 
-        // Print statistics for the past 1 day, 7 days, and 30 days using helper method
+        // Display individual seller statistics
         System.out.println("Sales statistics for seller " + sellerUUID);
         displayStats(sellerUUID, stats, 1);
         displayStats(sellerUUID, stats, 7);
         displayStats(sellerUUID, stats, 30);
+
+        // Display overall statistics for all users
+        displayAllStats(stats, 30);
+
+        // Display the bestseller for the past 30 days
+        String bestSeller = stats.getBestSeller(30);
+        System.out.println("Best-selling book in the past 30 days: " + (bestSeller != null ? bestSeller : "No data"));
+
+        // Display sales stats for all sellers
+        displayAllSellerStats(stats, 30);
 
         // Define filter parameters for displaying listings in the messageLabel
         List<String> genres = Arrays.asList("Hardcover"); // Example genres to filter
@@ -72,17 +81,52 @@ public class SellerController {
     }
 
     /**
-     * Helper method to display statistics for a given number of days.
+     * Helper method to display statistics for a given number of days for a specific seller.
      */
     private void displayStats(UUID sellerUUID, Statistics stats, int days) {
         Map<String, Double> salesStats = stats.getSalesStats(sellerUUID, days);
         if (salesStats != null) {
-            System.out.println("Past " + days + " days:");
+            System.out.println("Past " + days + " days for seller:");
             System.out.println("  Total Sales: " + salesStats.get("totalSales"));
             System.out.println("  Total Cost: " + salesStats.get("totalCost"));
             System.out.println("  Total Profit: " + salesStats.get("totalProfit"));
         } else {
             System.out.println("Error retrieving stats for past " + days + " days.");
+        }
+    }
+
+    /**
+     * Helper method to display overall statistics for all users.
+     */
+    private void displayAllStats(Statistics stats, int days) {
+        Map<String, Double> allStats = stats.getAllStats(days);
+        if (allStats != null) {
+            System.out.println("Overall stats for the past " + days + " days:");
+            System.out.println("  Total Sales: " + allStats.get("totalSales"));
+            System.out.println("  Total Cost: " + allStats.get("totalCost"));
+            System.out.println("  Total Profit: " + allStats.get("totalProfit"));
+        } else {
+            System.out.println("Error retrieving overall stats for past " + days + " days.");
+        }
+    }
+
+    /**
+     * Helper method to display sales statistics for all sellers.
+     */
+    private void displayAllSellerStats(Statistics stats, int days) {
+        Map<UUID, Map<String, Double>> allSellerStats = stats.getAllSellerStats(days);
+        if (allSellerStats != null) {
+            System.out.println("Sales stats for all sellers in the past " + days + " days:");
+            for (Map.Entry<UUID, Map<String, Double>> entry : allSellerStats.entrySet()) {
+                UUID sellerUUID = entry.getKey();
+                Map<String, Double> sellerStats = entry.getValue();
+                System.out.println("Seller UUID: " + sellerUUID);
+                System.out.println("  Total Sales: " + sellerStats.get("totalSales"));
+                System.out.println("  Total Cost: " + sellerStats.get("totalCost"));
+                System.out.println("  Total Profit: " + sellerStats.get("totalProfit"));
+            }
+        } else {
+            System.out.println("Error retrieving stats for all sellers for past " + days + " days.");
         }
     }
 

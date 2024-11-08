@@ -97,4 +97,26 @@ public class Users {
         }
     }
 
+    //get username by id
+    public String getUsernameById(UUID id) {
+        String query = "SELECT username FROM \"Users\" WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setObject(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("username");
+            } else {
+                return "Error: User not found.";
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error: Unable to retrieve username.";
+        }
+    }
+
 }
