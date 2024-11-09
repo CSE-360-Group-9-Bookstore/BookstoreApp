@@ -1,14 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="bookstore.controllers.SellerController" alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="bookstore.controllers.SellerController"
+      alignment="CENTER" spacing="15"
+      style="-fx-background-color: #222;">
+
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
+
     <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-    <Button fx:id="randomButton" text="Click Me!" onAction="#handleRandomAction" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
+
+
+    <Label text="Seller ID" style="-fx-text-fill: white;"/>
+    <TextField fx:id="sellerID" promptText="Enter Seller ID"/>
+
+    <Label text="Select Duration" style="-fx-text-fill: white;"/>
+    <ComboBox fx:id="duration"/>
+
+    <HBox spacing="10">
+        <VBox spacing="10">
+            <Label text="Sales Quantity" style="-fx-text-fill: white;"/>
+            <TextField fx:id="salesQuantity" promptText="Enter quantity"/>
+            <TextField fx:id="unit" promptText="Enter unit"/>
+        </VBox>
+        <VBox spacing="10">
+            <Label text="Sales Revenue" style="-fx-text-fill: white;"/>
+            <TextField fx:id="salesRevenue" promptText="Enter revenue ($)"/>
+        </VBox>
+        <VBox spacing="10">
+            <Label text="Net Profit" style="-fx-text-fill: white;"/>
+            <TextField fx:id="netProfit" promptText="Enter profit ($)"/>
+        </VBox>
+    </HBox>
+
+    <Label text="Your Current Offerings" style="-fx-text-fill: white;"/>
+    <ScrollPane fitToWidth="true" fitToHeight="true">
+        <ListView fx:id="currentOfferings"/>
+    </ScrollPane>
+
+    <VBox spacing="10">
+        <Label text="Add New Listing" style="-fx-text-fill: white;"/>
+
+        <Label text="Edit Book Title" style="-fx-text-fill: white;"/>
+        <TextField fx:id="bookTitle" promptText="Enter book title"/>
+
+        <Label text="Edit Author" style="-fx-text-fill: white;"/>
+        <TextField fx:id="author" promptText="Enter author"/>
+
+        <Label text="Edit Description" style="-fx-text-fill: white;"/>
+        <TextArea fx:id="description" promptText="Enter description"/>
+
+        <Label text="Edit ISBN-10" style="-fx-text-fill: white;"/>
+        <TextField fx:id="isbn10" promptText="Enter ISBN-10"/>
+
+        <Label text="Edit ISBN-13" style="-fx-text-fill: white;"/>
+        <TextField fx:id="isbn13" promptText="Enter ISBN-13"/>
+
+        <Label text="Edit Type of Book" style="-fx-text-fill: white;"/>
+        <TextField fx:id="bookType" promptText="Enter type of book"/>
+
+        <Label text="Edit Quantity" style="-fx-text-fill: white;"/>
+        <HBox spacing="10">
+            <TextField fx:id="quantity" promptText="Enter quantity"/>
+            <!-- Increment and decrement arrows can be added programmatically in the controller -->
+        </HBox>
+
+        <Label text="Edit Condition" style="-fx-text-fill: white;"/>
+        <HBox spacing="10">
+            <TextField fx:id="condition" promptText="Enter condition"/>
+            <!-- Increment and decrement arrows can be added programmatically in the controller -->
+        </HBox>
+
+        <Label text="Edit Price" style="-fx-text-fill: white;"/>
+        <HBox spacing="10">
+            <TextField fx:id="price" promptText="Enter price ($)"/>
+            <!-- Increment and decrement arrows can be added programmatically in the controller -->
+        </HBox>
+
+        <Button fx:id="updateListingButton" text="Update Listing" style="-fx-background-color: #444; -fx-text-fill: white;" visible="false"/>
+    </VBox>
+
 </VBox>

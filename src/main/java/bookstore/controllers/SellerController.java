@@ -1,8 +1,16 @@
 package bookstore.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import bookstore.lib.*;  // Import all classes from bookstore.lib
 import java.util.Map;
 import java.util.UUID;
@@ -20,7 +28,63 @@ public class SellerController {
     private Button randomButton;
 
     @FXML
+    private TextField sellerID;
+
+    @FXML
+    private ComboBox<String> duration;
+
+    @FXML
+    private TextField salesQuantity;
+
+    @FXML
+    private TextField unit;
+
+    @FXML
+    private TextField salesRevenue;
+
+    @FXML
+    private TextField netProfit;
+
+    @FXML
+    private ListView<String> currentOfferings;
+
+    @FXML
+    private TextField bookTitle;
+
+    @FXML
+    private TextField author;
+
+    @FXML
+    private TextArea description;
+
+    @FXML
+    private TextField isbn10;
+
+    @FXML
+    private TextField isbn13;
+
+    @FXML
+    private TextField bookType;
+
+    @FXML
+    private TextField quantity;
+
+    @FXML
+    private TextField condition;
+
+    @FXML
+    private TextField price;
+
+    @FXML
+    private Button updateListingButton;
+
+    @FXML
     private void initialize() {
+        // Initialize ComboBox with duration options
+        duration.setItems(FXCollections.observableArrayList(
+                "1 month", "2 months", "3 months", "6 months", "12 months"
+        ));
+
         // Get the current user's UUID from the Session
         User currentUser = Session.getInstance().getUser();
         UUID sellerUUID = currentUser.user_uuid;
