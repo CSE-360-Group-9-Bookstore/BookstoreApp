@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.List;
+import javafx.collections.ObservableList;
 
 public class SellerController {
 
@@ -80,6 +81,7 @@ public class SellerController {
 
     @FXML
     private void initialize() {
+
         // Initialize ComboBox with duration options
         duration.setItems(FXCollections.observableArrayList(
                 "1 month", "2 months", "3 months", "6 months", "12 months"
