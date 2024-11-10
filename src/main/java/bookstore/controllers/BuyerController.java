@@ -1,7 +1,11 @@
 package bookstore.controllers;
 
 import javafx.fxml.FXML;
+<<<<<<< HEAD
+import javafx.scene.control.ComboBox;
+=======
 import javafx.scene.control.Button;
+>>>>>>> origin/main
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
@@ -29,7 +33,14 @@ public class BuyerController {
     private ListView<String> listingIdList;
 
     @FXML
+<<<<<<< HEAD
+    private ComboBox<String> genreCB;
+
+    @FXML
+    private ComboBox<String> conCB;
+=======
     private Button buyButton; // Reference to the Buy button
+>>>>>>> origin/main
 
     @FXML
     private void initialize() {
@@ -37,7 +48,31 @@ public class BuyerController {
         allListings = fetchAllListings();
         refreshListingView();
 
+<<<<<<< HEAD
+        for (Map.Entry<UUID, Listings.Listing> entry : allListings.entrySet()) {
+            Listings.Listing listing = entry.getValue();
+            String displayText = listing.bookTitle + " - $" + listing.sellPrice;
+            listingDisplayItems.add(displayText);
+        }
+
+        // Populate ListView with book titles and prices
+        listingIdList.setItems(listingDisplayItems);
+
+        //genres get put in combo box hopefully.
+        ObservableList<String> genres = FXCollections.observableArrayList(
+                "Natural Science Books", "Computer Books", "Math Books", "English Language Books", "Other Books"
+        );
+        //sets the items above into the box hopefullty
+        genreCB.setItems(genres);
+
+        ObservableList<String> condition = FXCollections.observableArrayList(
+                "Used Like New", "Moderately Used", "Heavily Used"
+        );
+        conCB.setItems(condition);
+        // Add a click listener to display all details for the selected listing
+=======
         // Listener to display details when a listing is selected and show the Buy button
+>>>>>>> origin/main
         listingIdList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 displayListingDetails(getSelectedListingUUID());
