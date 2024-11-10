@@ -151,9 +151,10 @@ public class Main extends Application {
     private void loadCenterContent(String pageName) {
         try {
             System.out.println(pageName);
-            String fxmlFile = pageMap.get(pageName);
+            
+            String fxmlFile = pageMap.get(pageName.trim());
             if (fxmlFile == null) {
-                throw new RuntimeException("No FXML file mapped for page: " + pageName);
+                throw new RuntimeException("No FXML file mapped for page: |" + pageName+ "|");
             }
             System.out.println("Loading FXML: " + fxmlFile);
             URL resourceURL = getClass().getResource("/" + fxmlFile);

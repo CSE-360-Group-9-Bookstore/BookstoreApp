@@ -1,11 +1,11 @@
 package bookstore.controllers;
 
 import javafx.fxml.FXML;
-<<<<<<< HEAD
+
 import javafx.scene.control.ComboBox;
-=======
+
 import javafx.scene.control.Button;
->>>>>>> origin/main
+
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
@@ -23,6 +23,7 @@ import java.util.HashMap;
 public class BuyerController {
 
     Listings listings = new Listings();
+     ObservableList<String> listingDisplayItems = FXCollections.observableArrayList();
     private Map<UUID, Listings.Listing> allListings;
     private Map<String, UUID> displayTextToUUIDMap = new HashMap<>(); // Map for display text to UUID
 
@@ -33,14 +34,13 @@ public class BuyerController {
     private ListView<String> listingIdList;
 
     @FXML
-<<<<<<< HEAD
     private ComboBox<String> genreCB;
 
     @FXML
     private ComboBox<String> conCB;
-=======
+
     private Button buyButton; // Reference to the Buy button
->>>>>>> origin/main
+
 
     @FXML
     private void initialize() {
@@ -48,7 +48,7 @@ public class BuyerController {
         allListings = fetchAllListings();
         refreshListingView();
 
-<<<<<<< HEAD
+
         for (Map.Entry<UUID, Listings.Listing> entry : allListings.entrySet()) {
             Listings.Listing listing = entry.getValue();
             String displayText = listing.bookTitle + " - $" + listing.sellPrice;
@@ -69,10 +69,7 @@ public class BuyerController {
                 "Used Like New", "Moderately Used", "Heavily Used"
         );
         conCB.setItems(condition);
-        // Add a click listener to display all details for the selected listing
-=======
-        // Listener to display details when a listing is selected and show the Buy button
->>>>>>> origin/main
+
         listingIdList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 displayListingDetails(getSelectedListingUUID());
@@ -113,7 +110,7 @@ public class BuyerController {
 
     // Refresh ListView based on the latest state of allListings
     private void refreshListingView() {
-        ObservableList<String> listingDisplayItems = FXCollections.observableArrayList();
+       
         displayTextToUUIDMap.clear(); // Clear the mapping before repopulating
 
         for (Map.Entry<UUID, Listings.Listing> entry : allListings.entrySet()) {

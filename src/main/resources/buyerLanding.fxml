@@ -13,7 +13,6 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-<<<<<<< HEAD
     <!-- Left Side ( Scrollable ListView of Book Titles and Prices ) -->
     <VBox alignment="CENTER" >
         <Label text="Books Available" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
@@ -25,17 +24,11 @@
             <ComboBox fx:id="conCB" promptText="Condition"/>
         </HBox>
         <ListView fx:id="listingIdList" style="-fx-background-color: #333; -fx-text-fill: white;" maxWidth="250"/>
-=======
-    <!-- Left Side (Listing Details Display and Purchase Button) -->
-    <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
-        <Label fx:id="messageLabel" text="Select a listing to see details." style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-        <Button fx:id="buyButton" text="Buy this book" onAction="#handlePurchase" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
->>>>>>> origin/main
     </VBox>
 
     <!-- Right Side (Listing Details Display and Random Button) -->
     <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
         <Label fx:id="messageLabel" text="Select a listing to see details." style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-        <Button fx:id="randomButton" text="+ BUY" onAction="#handleRandomAction" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
+      
     </VBox>
 </HBox>
