@@ -54,8 +54,8 @@ public class SellerController {
             messageText.append(listingId).append(": ").append(bookTitle).append("\n");
         }
 
-        // Set the messageLabel text with filtered listing ID and title pairs
-        messageLabel.setText(messageText.toString().trim()); // Remove trailing newline
+        
+        messageLabel.setText(messageText.toString().trim()); /
     }
 
     @FXML

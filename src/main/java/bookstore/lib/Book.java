@@ -19,12 +19,7 @@ public class Book {
         this.genre = genre;
     }
 
-    public boolean editBook(String title, String author, double price, int isbn10, int isbn13, String condition,
-            String genre) {
-        return true;
-    }
 
-    public boolean dummyfunction() {
-        return true;
-    }
+
+
 }
