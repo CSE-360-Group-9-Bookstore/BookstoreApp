@@ -23,7 +23,24 @@ import javafx.scene.control.ListView;
 
 
 public class BuyerController {
-
+    @FXML
+    public Label titleLabel;
+    @FXML
+    public Label authorLabel;
+    @FXML
+    public Label stockLabel;
+    @FXML
+    public Label priceLabel;
+    @FXML
+    public Label isbn10Label;
+    @FXML
+    public Label isbn13Label;
+    @FXML
+    public Label genreLabel;
+    @FXML
+    public Label descriptionLabel;
+    @FXML
+    public Label conditionLabel;
     private Listings listings = new Listings();
     private ObservableList<String> listingDisplayItems = FXCollections.observableArrayList();
     private Map<UUID, Listings.Listing> allListings;
@@ -156,9 +173,19 @@ public class BuyerController {
     // Display detailed information for the selected listing
     private void displayListingDetails(UUID listingUUID) {
         Listings.Listing selectedListing = allListings.get(listingUUID);
+        buyButton.setVisible(true);
         if (selectedListing != null) {
-            messageLabel.setText(formatListingDetails(selectedListing));
+            titleLabel.setText(selectedListing.bookTitle);
+            authorLabel.setText(selectedListing.author);
+            descriptionLabel.setText(selectedListing.description);
+            genreLabel.setText(selectedListing.genre);
+            isbn10Label.setText("ISBN-10: " + selectedListing.ISBN10);
+            isbn13Label.setText("ISBN-13: " + selectedListing.ISBN13);
+            conditionLabel.setText("Condition: \"" + selectedListing.condition+ "\"");
+            priceLabel.setText("$" + selectedListing.sellPrice);
+            stockLabel.setText(selectedListing.quantity+ " Available");
         }
+
     }
 
     // Log the transaction
@@ -183,10 +210,4 @@ public class BuyerController {
         return String.format("%s - $%.2f", listing.bookTitle, listing.sellPrice);
     }
 
-    // Format listing details for display
-    private String formatListingDetails(Listings.Listing listing) {
-        return String.format("Book Title: %s\nAuthor: %s\nDescription: %s\nISBN-10: %s\nISBN-13: %s\nGenre: %s\nCondition: %s\nBuy Price: $%.2f\nSell Price: $%.2f\nQuantity: %d\nStatus: %s",
-                listing.bookTitle, listing.author, listing.description, listing.ISBN10, listing.ISBN13,
-                listing.genre, listing.condition, listing.msrp, listing.sellPrice,listing.quantity, listing.status);
-    }
 }
