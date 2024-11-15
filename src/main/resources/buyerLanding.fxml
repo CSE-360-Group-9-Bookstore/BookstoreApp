@@ -6,29 +6,32 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.scene.control.ComboBox?>
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="bookstore.controllers.BuyerController" alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
+
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="bookstore.controllers.BuyerController" alignment="CENTER" spacing="20" style="-fx-background-color: #222;">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <!-- Left Side ( Scrollable ListView of Book Titles and Prices ) -->
-    <VBox alignment="CENTER" >
+    <!-- Left Side (Scrollable ListView of Book Titles and Prices) -->
+    <VBox alignment="TOP_LEFT" spacing="10" style="-fx-background-color: #333;" HBox.hgrow="ALWAYS">
         <Label text="Books Available" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <HBox alignment="CENTER" spacing="15">
-            <padding>
-                <Insets top="10" bottom="15" />
-            </padding>
-            <ComboBox fx:id="genreCB" promptText="Genre"/>
-            <ComboBox fx:id="conCB" promptText="Condition"/>
+        
+        <!-- Filter Section -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <ComboBox fx:id="genreCB" promptText="Genre" maxWidth="120"/>
+            <ComboBox fx:id="conCB" promptText="Condition" maxWidth="120"/>
         </HBox>
-        <ListView fx:id="listingIdList" style="-fx-background-color: #333; -fx-text-fill: white;" maxWidth="250"/>
+
+        <!-- List of Books -->
+        <ListView fx:id="listingIdList" style="-fx-background-color: #333; -fx-text-fill: white;"/>
     </VBox>
 
-    <!-- Right Side (Listing Details Display and Random Button) -->
-    <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
+    <!-- Right Side (Listing Details Display and Buy Button) -->
+    <VBox alignment="TOP_LEFT" spacing="10" style="-fx-background-color: #222; -fx-padding: 15;" HBox.hgrow="ALWAYS">
         <Label fx:id="messageLabel" text="Select a listing to see details." style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-        <Button fx:id="randomButton" text="+ BUY" onAction="#handleRandomAction" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
+
+        <!-- Buy Button Section -->
+        <Button fx:id="buyButton" text="BUY" onAction="#handlePurchase" style="-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 5;" alignment="CENTER"/>
     </VBox>
 </HBox>

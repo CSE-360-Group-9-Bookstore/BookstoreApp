@@ -1,9 +1,13 @@
 package bookstore.lib;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Listings {
@@ -11,8 +15,14 @@ public class Listings {
     private static final String DB_URL = "jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres";
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
-
-    // Inner class representing a single listing
+    Map<String,Double> qualityFactor= new HashMap<>();
+    Map<String, Double> typeFactor = new HashMap<>();
+    
+    /*
+     * Listing Has: a Listing ID and Linker-Seller-ID for the table
+     *  Full Book Info: (Title, Author, Descr, ISBNs, Genre, Condition, 
+     *  msrp(intial seller given price), sellPrice(final), qty(nbr of 1:1 books), status)
+     */
     public class Listing {
         public UUID listingUUID;
         public String bookTitle;
@@ -22,14 +32,14 @@ public class Listings {
         public long ISBN13;
         public String genre;
         public String condition;
-        public double buyPrice;
+        public double msrp;
         public double sellPrice;
         public UUID sellerUUID;
         public int quantity;
         public String status;
 
         public Listing(UUID listingUUID, String bookTitle, String author, String description,
-                       long ISBN10, long ISBN13, String genre, String condition, double buyPrice,
+                       long ISBN10, long ISBN13, String genre, String condition, double msrp,
                        double sellPrice, UUID sellerUUID, int quantity) {
             this.listingUUID = listingUUID;
             this.bookTitle = bookTitle;
@@ -39,35 +49,45 @@ public class Listings {
             this.ISBN13 = ISBN13;
             this.genre = genre;
             this.condition = condition;
-            this.buyPrice = buyPrice;
+            this.msrp = msrp;
             this.sellPrice = sellPrice;
             this.sellerUUID = sellerUUID;
             this.quantity = quantity;
-            this.status = "available";  // Default status is "available"
+            this.status = "available";
+            qualityFactor.put("Used Like New", 1.00);
+    qualityFactor.put("Moderately Used", 0.66);
+    qualityFactor.put("Heavily Used", 0.33);
+    typeFactor.put("Computer Science", 5.00);
+    typeFactor.put("Natural Science", 15.00);
+    typeFactor.put("Mathematics", 10.00);
+    typeFactor.put("Other", -5.00);
+    typeFactor.put("English Language", 0.00);
         }
     }
 
-    // Method to create a new listing
-    public String createListing(String bookTitle, String author, String description,
-                                long ISBN10, long ISBN13, String genre, String condition,
-                                double buyPrice, double sellPrice, UUID sellerUUID, int quantity) {
+    public double calculateSellPrice(Listing draft) {
 
-        String insertQuery = "INSERT INTO \"Listings\" (book_title, author, description, \"ISBN-10\", \"ISBN-13\", genre, condition, buy_price, sell_price, \"sellerUUID\", quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        double init = draft.msrp * qualityFactor.get(draft.condition) + typeFactor.get(draft.genre);
+        return init * 1.025; // (0.025% platform fee)
+    }
+    public String createListing(Listing finalListing) {
 
+        String insertQuery = "INSERT INTO \"Listings\" (book_title, author, description, \"ISBN-10\", \"ISBN-13\", genre, condition, msrp, sell_price, \"sellerUUID\", quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        //check dup throw err
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
 
-            stmt.setString(1, bookTitle);
-            stmt.setString(2, author);
-            stmt.setString(3, description);
-            stmt.setLong(4, ISBN10);
-            stmt.setLong(5, ISBN13);
-            stmt.setString(6, genre);
-            stmt.setString(7, condition);
-            stmt.setDouble(8, buyPrice);
-            stmt.setDouble(9, sellPrice);
-            stmt.setObject(10, sellerUUID);
-            stmt.setInt(11, quantity);
+            stmt.setString(1, finalListing.bookTitle);
+            stmt.setString(2, finalListing.author);
+            stmt.setString(3, finalListing.description);
+            stmt.setLong(4, finalListing.ISBN10);
+            stmt.setLong(5, finalListing.ISBN13);
+            stmt.setString(6, finalListing.genre);
+            stmt.setString(7, finalListing.condition);
+            stmt.setDouble(8, finalListing.msrp);
+            stmt.setDouble(9, finalListing.sellPrice);
+            stmt.setObject(10, finalListing.sellerUUID);
+            stmt.setInt(11, finalListing.quantity);
             stmt.executeUpdate();
 
             return "Success: Listing created.";
@@ -78,6 +98,8 @@ public class Listings {
         }
     }
 
+    
+    
     // Method to retrieve listing information by UUID
     public Listing getListingInfo(UUID listingUUID) {
         String query = "SELECT * FROM \"Listings\" WHERE \"Listing_UUID\" = ?";
@@ -98,7 +120,7 @@ public class Listings {
                         rs.getLong("ISBN-13"),
                         rs.getString("genre"),
                         rs.getString("condition"),
-                        rs.getDouble("buy_price"),
+                        rs.getDouble("msrp"),
                         rs.getDouble("sell_price"),
                         UUID.fromString(rs.getString("sellerUUID")),
                         rs.getInt("quantity")
@@ -119,7 +141,7 @@ public class Listings {
         String deleteQuery = "DELETE FROM \"Listings\" WHERE \"Listing_UUID\" = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-             PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
+                PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
 
             stmt.setObject(1, listingUUID);
             int rowsAffected = stmt.executeUpdate();
@@ -135,16 +157,14 @@ public class Listings {
             return "Error: Unable to delete listing.";
         }
     }
-
-        public String purchaseBook(UUID listingUUID) {
+    public String purchaseBook(UUID listingUUID) {
             // Query to update the quantity
             String updateQuery = "UPDATE \"Listings\" SET quantity = quantity - 1 WHERE \"Listing_UUID\" = ? AND quantity > 0";
             // Query to delete the listing if quantity reaches 0
-            String deleteQuery = "DELETE FROM \"Listings\" WHERE \"Listing_UUID\" = ?";
+            String deleteQuery = "DELETE FROM \"Listings\" WHERE \"Listing_UUID\" = ? AND quantity <=0";
 
             try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
 
-                // First, try to update the quantity
                 try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
                     stmt.setObject(1, listingUUID);
 
@@ -193,12 +213,14 @@ public class Listings {
                         rs.getLong("ISBN-13"),
                         rs.getString("genre"),
                         rs.getString("condition"),
-                        rs.getDouble("buy_price"),
+                        rs.getDouble("msrp"),
                         rs.getDouble("sell_price"),
                         UUID.fromString(rs.getString("sellerUUID")),
                         rs.getInt("quantity")
                 );
-                listingsMap.put(listingUUID, listing);
+                if(listing.quantity>0){
+                    listingsMap.put(listingUUID, listing);
+                }
             }
 
         } catch (SQLException e) {
@@ -286,7 +308,7 @@ public class Listings {
                         rs.getLong("ISBN-13"),
                         rs.getString("genre"),
                         rs.getString("condition"),
-                        rs.getDouble("buy_price"),
+                        rs.getDouble("msrp"),
                         rs.getDouble("sell_price"),
                         UUID.fromString(rs.getString("sellerUUID")),
                         rs.getInt("quantity")
