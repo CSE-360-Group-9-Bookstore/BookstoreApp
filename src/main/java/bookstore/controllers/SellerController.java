@@ -15,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseEvent;
+import bookstore.lib.Listings.Listing;
+
+
 
 public class SellerController {
 
@@ -34,16 +38,16 @@ public class SellerController {
     private ComboBox<String> duration;
 
     @FXML
-    private TextField salesQuantity;
+    private Label  salesQuantityLabel;
 
     @FXML
     private TextField unit;
 
     @FXML
-    private TextField salesRevenue;
+    private Label  salesRevenueLabel;
 
     @FXML
-    private TextField netProfit;
+    private Label  netProfitLabel;
 
     @FXML
     private ListView<String> currentOfferings;
@@ -58,10 +62,10 @@ public class SellerController {
     private TextArea description;
 
     @FXML
-    private TextField isbn10;
+    private TextField ISBN10;
 
     @FXML
-    private TextField isbn13;
+    private TextField ISBN13;
 
     @FXML
     private TextField bookType;
@@ -82,12 +86,15 @@ public class SellerController {
     private Button addNewListingButton;
 
     @FXML
+    private Label sellingPrice;
+
+    @FXML
     private void initialize() {
         // Initialize ComboBox with duration options
         duration.setItems(FXCollections.observableArrayList(
                 "1 month", "2 months", "3 months", "6 months", "12 months"
         ));
-
+        duration.setOnAction(event -> updateSalesStats());
         // Get the current user's UUID from the Session
         User currentUser = Session.getInstance().getUser();
         UUID sellerUUID = currentUser.user_uuid;
@@ -99,23 +106,7 @@ public class SellerController {
         List<String> bookNames = getSellerCurrentOfferings(sellerUUID);
         currentOfferings.setItems(FXCollections.observableArrayList(bookNames));
 
-        // Initialize Statistics and retrieve stats for the seller UUID
-        Statistics stats = new Statistics();
-
-        // Display individual seller statistics
-        displayStats(sellerUUID, stats, 1);
-        displayStats(sellerUUID, stats, 7);
-        displayStats(sellerUUID, stats, 30);
-
-        // Display overall statistics for all users
-        displayAllStats(stats, 30);
-
-        // Display the bestseller for the past 30 days
-        String bestSeller = stats.getBestSeller(30);
-        System.out.println("Best-selling book in the past 30 days: " + (bestSeller != null ? bestSeller : "No data"));
-
-        // Display sales stats for all sellers
-        displayAllSellerStats(stats, 30);
+        currentOfferings.setOnMouseClicked(this::handleBookSelection);
 
         // Define filter parameters for displaying listings in the messageLabel
         List<String> genres = Arrays.asList("Hardcover"); // Example genres to filter
@@ -153,6 +144,83 @@ public class SellerController {
         messageLabel.setText(messageText.toString().trim()); // Remove trailing newline
     }
 
+    private void updateSalesStats() {
+        // Get the selected month from the ComboBox
+        String selectedMonth = duration.getValue();
+
+        // Check if a valid month is selected
+        if (selectedMonth != null && !selectedMonth.isEmpty()) {
+            // Convert selected month to the number of days for querying the stats
+            int days = convertMonthToDays(selectedMonth);
+
+            // Get the current user's UUID from the Session
+            User currentUser = Session.getInstance().getUser();
+            UUID sellerUUID = currentUser.user_uuid;
+
+            // Fetch stats for the seller based on the selected month
+            Statistics stats = new Statistics();
+            Map<String, Double> salesStats = stats.getSalesStats(sellerUUID, days);
+
+            // Update the labels with the fetched stats
+            if (salesStats != null) {
+                salesQuantityLabel.setText(""+ salesStats.get("totalSales"));
+                salesRevenueLabel.setText(""+ salesStats.get("totalCost"));
+                netProfitLabel.setText(""+ salesStats.get("totalProfit"));
+            }
+        }
+    }
+
+    private int convertMonthToDays(String month) {
+        switch (month) {
+            case "1 month":
+                return 30;
+            case "2 months":
+                return 60;
+            case "3 months":
+                return 90;
+            case "6 months":
+                return 180;
+            case "12 months":
+                return 365;
+            default:
+                return 0;
+        }
+    }
+    @FXML
+    private void handleBookSelection(MouseEvent event) {
+        String selectedBookTitle = currentOfferings.getSelectionModel().getSelectedItem();
+        if (selectedBookTitle != null) {
+            Listings.Listing selectedListing = getListingByTitle(selectedBookTitle);
+            if (selectedListing != null) {
+                populateBookDetails(selectedListing);
+            }
+        }
+    }
+
+    private Listings.Listing getListingByTitle(String bookTitle) {
+        UUID sellerUUID = Session.getInstance().getUser().user_uuid;
+        List<Listings.Listing> sellerListings = listings.getSellerCurrentOfferings(sellerUUID);
+        for (Listings.Listing listing : sellerListings) {
+            if (listing.bookTitle.equals(bookTitle)) {
+                return listing;
+            }
+        }
+        return null;
+    }
+
+    private void populateBookDetails(Listings.Listing listing) {
+        bookTitle.setText(listing.bookTitle);
+        author.setText(listing.author);
+        description.setText(listing.description);
+        ISBN10.setText(Long.toString(listing.ISBN10));
+        ISBN13.setText(Long.toString(listing.ISBN13));
+        bookType.setText(listing.genre);
+        quantity.setText(Integer.toString(listing.quantity));
+        condition.setText(listing.condition);
+        price.setText(Double.toString(listing.sellPrice));
+    }
+
+
     /**
      * Fetch and return the list of book titles for the current offerings of the seller.
      */
@@ -165,56 +233,16 @@ public class SellerController {
         return bookNames;
     }
 
-    /**
-     * Helper method to display statistics for a given number of days for a specific seller.
-     */
-    private void displayStats(UUID sellerUUID, Statistics stats, int days) {
-        Map<String, Double> salesStats = stats.getSalesStats(sellerUUID, days);
-        if (salesStats != null) {
-            System.out.println("Past " + days + " days for seller:");
-            System.out.println("  Total Sales: " + salesStats.get("totalSales"));
-            System.out.println("  Total Cost: " + salesStats.get("totalCost"));
-            System.out.println("  Total Profit: " + salesStats.get("totalProfit"));
-        } else {
-            System.out.println("Error retrieving stats for past " + days + " days.");
-        }
-    }
-
-    /**
-     * Helper method to display overall statistics for all users.
-     */
-    private void displayAllStats(Statistics stats, int days) {
-        Map<String, Double> allStats = stats.getAllStats(days);
-        if (allStats != null) {
-            System.out.println("Overall stats for the past " + days + " days:");
-            System.out.println("  Total Sales: " + allStats.get("totalSales"));
-            System.out.println("  Total Cost: " + allStats.get("totalCost"));
-            System.out.println("  Total Profit: " + allStats.get("totalProfit"));
-        } else {
-            System.out.println("Error retrieving overall stats for past " + days + " days.");
-        }
-    }
-
-
-    private void displayAllSellerStats(Statistics stats, int days) {
-        Map<UUID, Map<String, Double>> allSellerStats = stats.getAllSellerStats(days);
-        if (allSellerStats != null) {
-            System.out.println("Sales stats for all sellers in the past " + days + " days:");
-            for (Map.Entry<UUID, Map<String, Double>> entry : allSellerStats.entrySet()) {
-                UUID sellerUUID = entry.getKey();
-                Map<String, Double> sellerStats = entry.getValue();
-                System.out.println("Seller UUID: " + sellerUUID);
-                System.out.println("  Total Sales: " + sellerStats.get("totalSales"));
-                System.out.println("  Total Cost: " + sellerStats.get("totalCost"));
-                System.out.println("  Total Profit: " + sellerStats.get("totalProfit"));
-            }
-        } else {
-            System.out.println("Error retrieving stats for all sellers for past " + days + " days.");
-        }
-    }
 
     @FXML
     private void handleRandomAction() {
         messageLabel.setText("You clicked the button! Something random happened.");
+    }
+
+
+    @FXML
+    private void displaySellingPrice(Listing listing) {
+        double calculatedPrice = listings.calculateSellPrice(listing);
+        sellingPrice.setText(String.format("%.2f", 26));
     }
 }

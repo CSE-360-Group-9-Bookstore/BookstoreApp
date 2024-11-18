@@ -26,13 +26,13 @@
         <ComboBox fx:id="duration"/>
 
         <Label text="Sales Quantity" style="-fx-text-fill: black;"/>
-        <TextField fx:id="salesQuantity" promptText="Enter quantity"/>
+        <Label fx:id="salesQuantityLabel" />
 
         <Label text="Sales Revenue" style="-fx-text-fill: black;"/>
-        <TextField fx:id="salesRevenue" promptText="Enter revenue ($)"/>
+        <Label fx:id="salesRevenueLabel" />
 
         <Label text="Net Profit" style="-fx-text-fill: black;"/>
-        <TextField fx:id="netProfit" promptText="Enter profit ($)"/>
+        <Label fx:id="netProfitLabel" />
 
         <Label text="Your Current Offerings" style="-fx-text-fill: black;"/>
         <ScrollPane fitToWidth="true" fitToHeight="true">
@@ -54,11 +54,12 @@
         <Label text="Edit Description" style="-fx-text-fill: black;"/>
         <TextArea fx:id="description" promptText="Enter description"/>
 
+
         <Label text="Edit ISBN-10" style="-fx-text-fill: black;"/>
-        <TextField fx:id="isbn10" promptText="Enter ISBN-10"/>
+        <TextField fx:id="ISBN10" promptText="Enter ISBN-10"/>
 
         <Label text="Edit ISBN-13" style="-fx-text-fill: black;"/>
-        <TextField fx:id="isbn13" promptText="Enter ISBN-13"/>
+        <TextField fx:id="ISBN13" promptText="Enter ISBN-13"/>
 
         <Label text="Edit Type of Book" style="-fx-text-fill: black;"/>
         <TextField fx:id="bookType" promptText="Enter type of book"/>
@@ -72,6 +73,12 @@
         <Label text="Edit Price" style="-fx-text-fill: black;"/>
         <TextField fx:id="price" promptText="Enter price ($)"/>
 
+        <Label text="Selling Price" style="-fx-text-fill: black;"/>
+        <Label fx:id="sellingPrice" /> <!-- Changed to Label -->
+
         <Button fx:id="updateListingButton" text="Update Listing" style="-fx-background-color: #444; -fx-text-fill: white;" visible="false"/>
     </VBox>
+
+
+
 </HBox>
