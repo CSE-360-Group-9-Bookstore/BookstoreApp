@@ -19,8 +19,8 @@
     <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
         <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: black; -fx-font-size: 16px;"/>
 
-        <Label text="Seller ID" style="-fx-text-fill: black;"/>
-        <TextField fx:id="sellerID" promptText="Enter Seller ID"/>
+        <Label text="Seller:" style="-fx-text-fill: black;"/>
+        <Label fx:id="sellerIDLabel" style="-fx-text-fill: black; -fx-font-size: 14px;"/>
 
         <Label text="Select Duration" style="-fx-text-fill: black;"/>
         <ComboBox fx:id="duration"/>

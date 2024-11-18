@@ -114,6 +114,47 @@ public class Listings {
         }
     }
 
+
+
+        public List<Listing> getSellerCurrentOfferings(UUID sellerUUID) {
+            String query = "SELECT * FROM \"Listings\" WHERE \"sellerUUID\" = ?";
+            List<Listing> sellerListings = new ArrayList<>();
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+
+                stmt.setObject(1, sellerUUID);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    Listing listing = new Listing(
+                            UUID.fromString(rs.getString("Listing_UUID")),
+                            rs.getString("book_title"),
+                            rs.getString("author"),
+                            rs.getString("description"),
+                            rs.getLong("ISBN-10"),
+                            rs.getLong("ISBN-13"),
+                            rs.getString("genre"),
+                            rs.getString("condition"),
+                            rs.getDouble("msrp"),
+                            rs.getDouble("sell_price"),
+                            UUID.fromString(rs.getString("sellerUUID")),
+                            rs.getInt("quantity")
+                    );
+                    sellerListings.add(listing);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Error: Unable to retrieve seller's current offerings.");
+            }
+
+            return sellerListings;
+        }
+
+
+
+
     // Method to delete a listing by UUID
     public String deleteListing(UUID listingUUID) {
         String deleteQuery = "DELETE FROM \"Listings\" WHERE \"Listing_UUID\" = ?";

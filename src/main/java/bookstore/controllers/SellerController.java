@@ -6,21 +6,20 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import bookstore.lib.*;  // Import all classes from bookstore.lib
 import java.util.Map;
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import javafx.collections.ObservableList;
 
 public class SellerController {
 
     Listings listings = new Listings();
+    Users users = new Users(); // Add Users instance
 
     @FXML
     private Label messageLabel;
@@ -29,7 +28,7 @@ public class SellerController {
     private Button randomButton;
 
     @FXML
-    private TextField sellerID;
+    private Label sellerIDLabel; // Changed from TextField to Label
 
     @FXML
     private ComboBox<String> duration;
@@ -80,8 +79,10 @@ public class SellerController {
     private Button updateListingButton;
 
     @FXML
-    private void initialize() {
+    private Button addNewListingButton;
 
+    @FXML
+    private void initialize() {
         // Initialize ComboBox with duration options
         duration.setItems(FXCollections.observableArrayList(
                 "1 month", "2 months", "3 months", "6 months", "12 months"
@@ -91,11 +92,17 @@ public class SellerController {
         User currentUser = Session.getInstance().getUser();
         UUID sellerUUID = currentUser.user_uuid;
 
+        // Set the seller ID label with the username
+        sellerIDLabel.setText(users.getUsernameById(sellerUUID));
+
+        // Fetch and display current offerings
+        List<String> bookNames = getSellerCurrentOfferings(sellerUUID);
+        currentOfferings.setItems(FXCollections.observableArrayList(bookNames));
+
         // Initialize Statistics and retrieve stats for the seller UUID
         Statistics stats = new Statistics();
 
         // Display individual seller statistics
-        System.out.println("Sales statistics for seller " + sellerUUID);
         displayStats(sellerUUID, stats, 1);
         displayStats(sellerUUID, stats, 7);
         displayStats(sellerUUID, stats, 30);
@@ -147,6 +154,18 @@ public class SellerController {
     }
 
     /**
+     * Fetch and return the list of book titles for the current offerings of the seller.
+     */
+    private List<String> getSellerCurrentOfferings(UUID sellerUUID) {
+        List<Listings.Listing> sellerListings = listings.getSellerCurrentOfferings(sellerUUID);
+        List<String> bookNames = new ArrayList<>();
+        for (Listings.Listing listing : sellerListings) {
+            bookNames.add(listing.bookTitle);
+        }
+        return bookNames;
+    }
+
+    /**
      * Helper method to display statistics for a given number of days for a specific seller.
      */
     private void displayStats(UUID sellerUUID, Statistics stats, int days) {
@@ -176,9 +195,7 @@ public class SellerController {
         }
     }
 
-    /**
-     * Helper method to display sales statistics for all sellers.
-     */
+
     private void displayAllSellerStats(Statistics stats, int days) {
         Map<UUID, Map<String, Double>> allSellerStats = stats.getAllSellerStats(days);
         if (allSellerStats != null) {
