@@ -26,7 +26,7 @@ import java.util.*;
 public class Main extends Application {
     private static final Font FONT = Font.font("Arial", 14);
     private static final Font WELCOME_FONT = Font.font("Arial", 20);
-
+    public User authenticatedUser;
     private Scene loginScene;
     private Scene mainScene;
     private BorderPane mainLayout;
@@ -70,7 +70,7 @@ public class Main extends Application {
             submitButton.setDisable(true);
             String username = usernameField.getText();
             String password = passwordField.getText();
-            User authenticatedUser = users.authenticateUser(username, password);
+            authenticatedUser = users.authenticateUser(username, password);
 
             submitButton.setText("Login");
             submitButton.setDisable(false);

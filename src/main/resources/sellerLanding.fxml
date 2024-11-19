@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -9,76 +9,96 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="bookstore.controllers.SellerController"
-      style="-fx-background-color: white; -fx-padding: 20;">
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="bookstore.controllers.SellerController">
 
-    <!-- Left Column -->
-    <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
-        <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: black; -fx-font-size: 16px;"/>
+    <HBox style="-fx-background-color: white;"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
-        <Label text="Seller:" style="-fx-text-fill: black;"/>
-        <Label fx:id="sellerIDLabel" style="-fx-text-fill: black; -fx-font-size: 14px;"/>
+        <!-- Left Column -->
+        <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+            <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: black; -fx-font-size: 16px;"/>
 
-        <Label text="Select Duration" style="-fx-text-fill: black;"/>
-        <ComboBox fx:id="duration"/>
+            <Label text="Seller:" style="-fx-text-fill: black;"/>
+            <Label fx:id="sellerIDLabel" style="-fx-text-fill: black; -fx-font-size: 14px;"/>
 
-        <Label text="Sales Quantity" style="-fx-text-fill: black;"/>
-        <Label fx:id="salesQuantityLabel" />
+            <Label text="Select Duration" style="-fx-text-fill: black;"/>
+            <ComboBox fx:id="duration"/>
 
-        <Label text="Sales Revenue" style="-fx-text-fill: black;"/>
-        <Label fx:id="salesRevenueLabel" />
+            <Label text="Sales Quantity" style="-fx-text-fill: black;"/>
+            <Label fx:id="salesQuantityLabel" />
 
-        <Label text="Net Profit" style="-fx-text-fill: black;"/>
-        <Label fx:id="netProfitLabel" />
+            <Label text="Sales Revenue" style="-fx-text-fill: black;"/>
+            <Label fx:id="salesRevenueLabel" />
 
-        <Label text="Your Current Offerings" style="-fx-text-fill: black;"/>
-        <ScrollPane fitToWidth="true" fitToHeight="true">
-            <ListView fx:id="currentOfferings"/>
-        </ScrollPane>
-    </VBox>
+            <Label text="Net Profit" style="-fx-text-fill: black;"/>
+            <Label fx:id="netProfitLabel" />
 
-    <!-- Right Column -->
-    <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
-        <!-- Add New Listing Button -->
-        <Button fx:id="addNewListingButton" text="Add New Listing" style="-fx-background-color: #444; -fx-text-fill: white;"/>
+            <Label text="Your Current Offerings" style="-fx-text-fill: black;"/>
+            <ScrollPane fitToWidth="true" fitToHeight="true">
+                <ListView fx:id="currentOfferings"/>
+            </ScrollPane>
+        </VBox>
 
-        <Label text="Edit Book Title" style="-fx-text-fill: black;"/>
-        <TextField fx:id="bookTitle" promptText="Enter book title"/>
+        <!-- Right Column -->
+        <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+            <Label text="Edit Book Title" style="-fx-text-fill: black;"/>
+            <TextField fx:id="bookTitle" promptText="Enter book title"/>
 
-        <Label text="Edit Author" style="-fx-text-fill: black;"/>
-        <TextField fx:id="author" promptText="Enter author"/>
+            <Label text="Edit Author" style="-fx-text-fill: black;"/>
+            <TextField fx:id="author" promptText="Enter author"/>
 
-        <Label text="Edit Description" style="-fx-text-fill: black;"/>
-        <TextArea fx:id="description" promptText="Enter description"/>
+            <Label text="Edit Description" style="-fx-text-fill: black;"/>
+            <TextArea fx:id="description" promptText="Enter description"/>
+
+            <Label text="Edit ISBN-10" style="-fx-text-fill: black;"/>
+            <TextField fx:id="ISBN10" promptText="Enter ISBN-10"/>
+
+            <Label text="Edit ISBN-13" style="-fx-text-fill: black;"/>
+            <TextField fx:id="ISBN13" promptText="Enter ISBN-13"/>
+
+            <Label text="Edit Genre" style="-fx-text-fill: black;"/>
+            <ComboBox fx:id="bookGenre" promptText="Select Genre">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Computer Science"/>
+                        <String fx:value="Natural Science"/>
+                        <String fx:value="Mathematics"/>
+                        <String fx:value="Other"/>
+                        <String fx:value="English Language"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Edit Condition" style="-fx-text-fill: black;"/>
+            <ComboBox fx:id="condition" promptText="Select Condition">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Used Like New"/>
+                        <String fx:value="Moderately Used"/>
+                        <String fx:value="Heavily Used"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Edit Quantity" style="-fx-text-fill: black;"/>
+            <TextField fx:id="quantity" promptText="Enter quantity"/>
+
+            <Label text="Edit Price" style="-fx-text-fill: black;"/>
+            <TextField fx:id="price" promptText="Enter price ($)"/>
+            <Button fx:id="updateListingButton" onAction="#createBookListing" text="Get Price"
+                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
+            <Label text="Selling Price" style="-fx-text-fill: black;"/>
+            <Label fx:id="sellingPrice" />
 
 
-        <Label text="Edit ISBN-10" style="-fx-text-fill: black;"/>
-        <TextField fx:id="ISBN10" promptText="Enter ISBN-10"/>
+        </VBox>
 
-        <Label text="Edit ISBN-13" style="-fx-text-fill: black;"/>
-        <TextField fx:id="ISBN13" promptText="Enter ISBN-13"/>
-
-        <Label text="Edit Type of Book" style="-fx-text-fill: black;"/>
-        <TextField fx:id="bookType" promptText="Enter type of book"/>
-
-        <Label text="Edit Quantity" style="-fx-text-fill: black;"/>
-        <TextField fx:id="quantity" promptText="Enter quantity"/>
-
-        <Label text="Edit Condition" style="-fx-text-fill: black;"/>
-        <TextField fx:id="condition" promptText="Enter condition"/>
-
-        <Label text="Edit Price" style="-fx-text-fill: black;"/>
-        <TextField fx:id="price" promptText="Enter price ($)"/>
-
-        <Label text="Selling Price" style="-fx-text-fill: black;"/>
-        <Label fx:id="sellingPrice" /> <!-- Changed to Label -->
-
-        <Button fx:id="updateListingButton" text="Update Listing" style="-fx-background-color: #444; -fx-text-fill: white;" visible="false"/>
-    </VBox>
-
-
-
-</HBox>
+    </HBox>
+</AnchorPane>

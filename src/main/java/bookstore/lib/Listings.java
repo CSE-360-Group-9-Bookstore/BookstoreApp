@@ -11,9 +11,12 @@ public class Listings {
     private static final String DB_URL = "jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres";
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
+    public static Map<String,Double> qualityFactor= new HashMap<>();
+    public static Map<String, Double> typeFactor = new HashMap<>();
+
 
     // Inner class representing a single listing
-    public class Listing {
+    public static class Listing {
         public UUID listingUUID;
         public String bookTitle;
         public String author;
@@ -22,16 +25,16 @@ public class Listings {
         public long ISBN13;
         public String genre;
         public String condition;
-        public double buyPrice;
+        public double msrp;
         public double sellPrice;
         public UUID sellerUUID;
         public int quantity;
         public String status;
 
-        public Listing(UUID listingUUID, String bookTitle, String author, String description,
-                       long ISBN10, long ISBN13, String genre, String condition, double buyPrice,
-                       double sellPrice, UUID sellerUUID, int quantity) {
-            this.listingUUID = listingUUID;
+        public Listing(String bookTitle, String author, String description,
+                       long ISBN10, long ISBN13, String genre, String condition, double msrp,
+                       UUID sellerUUID, int quantity) {
+            this.listingUUID = UUID.randomUUID();
             this.bookTitle = bookTitle;
             this.author = author;
             this.description = description;
@@ -39,35 +42,71 @@ public class Listings {
             this.ISBN13 = ISBN13;
             this.genre = genre;
             this.condition = condition;
-            this.buyPrice = buyPrice;
+            this.msrp = msrp;
+            this.sellPrice = 0;
+            this.sellerUUID = sellerUUID;
+            this.quantity = quantity;
+            this.status = "available";
+            qualityFactor.put("Used Like New", 1.00);
+            qualityFactor.put("Moderately Used", 0.66);
+            qualityFactor.put("Heavily Used", 0.33);
+            typeFactor.put("Computer Science", 5.00);
+            typeFactor.put("Natural Science", 15.00);
+            typeFactor.put("Mathematics", 10.00);
+            typeFactor.put("Other", -5.00);
+            typeFactor.put("English Language", 0.00);
+        }
+        public Listing(UUID uuid, String bookTitle, String author, String description,
+                       long ISBN10, long ISBN13, String genre, String condition, double msrp,double sellPrice,
+                       UUID sellerUUID, int quantity) {
+            this.listingUUID = uuid;
+            this.bookTitle = bookTitle;
+            this.author = author;
+            this.description = description;
+            this.ISBN10 = ISBN10;
+            this.ISBN13 = ISBN13;
+            this.genre = genre;
+            this.condition = condition;
+            this.msrp = msrp;
             this.sellPrice = sellPrice;
             this.sellerUUID = sellerUUID;
             this.quantity = quantity;
-            this.status = "available";  // Default status is "available"
+            this.status = "available";
+            qualityFactor.put("Used Like New", 1.00);
+            qualityFactor.put("Moderately Used", 0.66);
+            qualityFactor.put("Heavily Used", 0.33);
+            typeFactor.put("Computer Science", 5.00);
+            typeFactor.put("Natural Science", 15.00);
+            typeFactor.put("Mathematics", 10.00);
+            typeFactor.put("Other", -5.00);
+            typeFactor.put("English Language", 0.00);
         }
-    }
+        .00    }
 
-    // Method to create a new listing
-    public String createListing(String bookTitle, String author, String description,
-                                long ISBN10, long ISBN13, String genre, String condition,
-                                double buyPrice, double sellPrice, UUID sellerUUID, int quantity) {
+    public double calculateSellPrice(Listing draft) {
 
-        String insertQuery = "INSERT INTO \"Listings\" (book_title, author, description, \"ISBN-10\", \"ISBN-13\", genre, condition, buy_price, sell_price, \"sellerUUID\", quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        double init = draft.msrp * qualityFactor.get(draft.condition) + typeFactor.get(draft.genre);
+        return init * 1.025; // (0.025% platform fee)
+    }/
+    // Method to create a new listingad
+    public static String createListing(Listing finalListing) {
 
+        String insertQuery = "INSERT INTO \"Listings\" (book_title, author, description, \"ISBN-10\", \"ISBN-13\", genre, condition, msrp, sell_price, \"sellerUUID\", quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        //check dup throw err
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
 
-            stmt.setString(1, bookTitle);
-            stmt.setString(2, author);
-            stmt.setString(3, description);
-            stmt.setLong(4, ISBN10);
-            stmt.setLong(5, ISBN13);
-            stmt.setString(6, genre);
-            stmt.setString(7, condition);
-            stmt.setDouble(8, buyPrice);
-            stmt.setDouble(9, sellPrice);
-            stmt.setObject(10, sellerUUID);
-            stmt.setInt(11, quantity);
+            stmt.setString(1, finalListing.bookTitle);
+            stmt.setString(2, finalListing.author);
+            stmt.setString(3, finalListing.description);
+            stmt.setLong(4, finalListing.ISBN10);
+            stmt.setLong(5, finalListing.ISBN13);
+            stmt.setString(6, finalListing.genre);
+            stmt.setString(7, finalListing.condition);
+            stmt.setDouble(8, finalListing.msrp);
+            stmt.setDouble(9, finalListing.sellPrice);
+            stmt.setObject(10, finalListing.sellerUUID);
+            stmt.setInt(11, finalListing.quantity);
             stmt.executeUpdate();
 
             return "Success: Listing created.";
@@ -77,7 +116,6 @@ public class Listings {
             return "Error: Unable to create listing.";
         }
     }
-
     // Method to retrieve listing information by UUID
     public Listing getListingInfo(UUID listingUUID) {
         String query = "SELECT * FROM \"Listings\" WHERE \"Listing_UUID\" = ?";

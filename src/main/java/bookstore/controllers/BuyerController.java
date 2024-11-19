@@ -131,7 +131,7 @@ public class BuyerController {
                         buyerUUID,
                         listing.sellerUUID,
                         listing.sellPrice,
-                        listing.buyPrice,
+                        listing.msrp,
                         listing.bookTitle
                 );
             }
@@ -157,7 +157,7 @@ public class BuyerController {
                     "ISBN-13: " + selectedListing.ISBN13 + "\n" +
                     "Genre: " + selectedListing.genre + "\n" +
                     "Condition: " + selectedListing.condition + "\n" +
-                    "Buy Price: $" + selectedListing.buyPrice + "\n" +
+                    "Buy Price: $" + selectedListing.msrp + "\n" +
                     "Sell Price: $" + selectedListing.sellPrice + "\n" +
                     "Seller ID: " + selectedListing.sellerUUID + "\n" +
                     "Quantity: " + selectedListing.quantity + "\n" +

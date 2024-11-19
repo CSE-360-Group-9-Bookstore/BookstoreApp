@@ -1,20 +1,16 @@
 package bookstore.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import bookstore.lib.*;  // Import all classes from bookstore.lib
 import java.util.Map;
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import javafx.collections.ObservableList;
+
 import javafx.scene.input.MouseEvent;
 import bookstore.lib.Listings.Listing;
 
@@ -24,7 +20,8 @@ public class SellerController {
 
     Listings listings = new Listings();
     Users users = new Users(); // Add Users instance
-
+    private boolean sellPriceCalced = false;
+    public Listing draft;
     @FXML
     private Label messageLabel;
 
@@ -45,6 +42,12 @@ public class SellerController {
 
     @FXML
     private Label  salesRevenueLabel;
+
+    @FXML
+    private ComboBox<String> bookGenre;
+
+    @FXML
+    private ComboBox<String> condition;
 
     @FXML
     private Label  netProfitLabel;
@@ -68,13 +71,8 @@ public class SellerController {
     private TextField ISBN13;
 
     @FXML
-    private TextField bookType;
-
-    @FXML
     private TextField quantity;
 
-    @FXML
-    private TextField condition;
 
     @FXML
     private TextField price;
@@ -91,6 +89,13 @@ public class SellerController {
     @FXML
     private void initialize() {
         // Initialize ComboBox with duration options
+        bookGenre.setItems(FXCollections.observableArrayList(
+                "Computer Science", "Natural Science", "Mathematics", "Other", "English Language"
+        ));
+        condition.setItems(FXCollections.observableArrayList(
+                "Used Like New", "Moderately Used", "Heavily Used"
+        ));
+
         duration.setItems(FXCollections.observableArrayList(
                 "1 month", "2 months", "3 months", "6 months", "12 months"
         ));
@@ -109,8 +114,8 @@ public class SellerController {
         currentOfferings.setOnMouseClicked(this::handleBookSelection);
 
         // Define filter parameters for displaying listings in the messageLabel
-        List<String> genres = Arrays.asList("Hardcover"); // Example genres to filter
-        List<String> conditions = Arrays.asList("New"); // Example types to filter
+        List<String> genres = Arrays.asList("Mathematics"); // Example genres to filter
+        List<String> conditions = Arrays.asList("Used Like New"); // Example types to filter
         Double minSellPrice = 10.0; // Minimum sell price
         Double maxSellPrice = 50.0; // Maximum sell price
         String search = "Harper"; // Search keyword
@@ -187,6 +192,86 @@ public class SellerController {
         }
     }
     @FXML
+    private void createBookListing(ActionEvent event) {
+        try {
+            if (bookTitle.getText() == null || bookTitle.getText().isEmpty()) {
+                throw new IllegalArgumentException("Book title cannot be empty.");
+            }
+            if (author.getText() == null || author.getText().isEmpty()) {
+                throw new IllegalArgumentException("Author cannot be empty.");
+            }
+            long isbn10 = Long.parseLong(ISBN10.getText());
+            if (String.valueOf(isbn10).length() != 10) {
+                throw new IllegalArgumentException("ISBN-10 must be a 10-digit number.");
+            }
+            long isbn13 = Long.parseLong(ISBN13.getText());
+            if (String.valueOf(isbn13).length() != 13) {
+                throw new IllegalArgumentException("ISBN-13 must be a 13-digit number.");
+            }
+            if (bookGenre.getValue() == null || bookGenre.getValue().isEmpty()) {
+                throw new IllegalArgumentException("Genre must be selected.");
+            }
+            if (condition.getValue() == null || condition.getValue().isEmpty()) {
+                throw new IllegalArgumentException("Condition must be selected.");
+            }
+            double priceValue = Double.parseDouble(price.getText());
+            if (priceValue <= 0) {
+                throw new IllegalArgumentException("Price must be greater than zero.");
+            }
+            int quantityValue = Integer.parseInt(quantity.getText());
+            if (quantityValue <= 0) {
+                throw new IllegalArgumentException("Quantity must be greater than zero.");
+            }
+
+            draft = new Listing(
+                    bookTitle.getText(),
+                    author.getText(),
+                    description.getText(),
+                    isbn10,
+                    isbn13,
+                    bookGenre.getValue(),
+                    condition.getValue(),
+                    priceValue,
+                    Session.getInstance().getUser().user_uuid,
+                    quantityValue
+            );
+
+            if (!sellPriceCalced) {
+                draft.sellPrice = displaySellingPrice(draft);
+                updateListingButton.setText("Submit Listing");
+            } else {
+                Listings.createListing(draft);
+                sellingPrice.setText("$" + String.format("%.2f", 0));
+                bookTitle.clear();
+                author.clear();
+                bookGenre.setValue(null);
+                condition.setValue(null);
+                ISBN10.clear();
+                ISBN13.clear();
+                price.clear();
+                quantity.clear();
+
+                updateListingButton.setText("Calculate Sell Price");
+            }
+
+            sellPriceCalced = !sellPriceCalced;
+        } catch (NumberFormatException e) {
+            showErrorPopup("Invalid number format: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            showErrorPopup(e.getMessage());
+        } catch (Exception e) {
+            showErrorPopup("An unexpected error occurred: " + e.getMessage());
+        }
+    }
+
+    private void showErrorPopup(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Input Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    @FXML
     private void handleBookSelection(MouseEvent event) {
         String selectedBookTitle = currentOfferings.getSelectionModel().getSelectedItem();
         if (selectedBookTitle != null) {
@@ -209,14 +294,15 @@ public class SellerController {
     }
 
     private void populateBookDetails(Listings.Listing listing) {
+        sellPriceCalced = false;
         bookTitle.setText(listing.bookTitle);
         author.setText(listing.author);
         description.setText(listing.description);
         ISBN10.setText(Long.toString(listing.ISBN10));
         ISBN13.setText(Long.toString(listing.ISBN13));
-        bookType.setText(listing.genre);
+        bookGenre.setValue(listing.genre);
         quantity.setText(Integer.toString(listing.quantity));
-        condition.setText(listing.condition);
+        condition.setValue(listing.condition);
         price.setText(Double.toString(listing.sellPrice));
     }
 
@@ -241,8 +327,15 @@ public class SellerController {
 
 
     @FXML
-    private void displaySellingPrice(Listing listing) {
-        double calculatedPrice = listings.calculateSellPrice(listing);
-        sellingPrice.setText(String.format("%.2f", 26));
+    private double displaySellingPrice(Listing listing) {
+        try {
+            double calculatedPrice = listings.calculateSellPrice(listing);
+            sellingPrice.setText("$" + String.format("%.2f", calculatedPrice));
+            return calculatedPrice;
+        } catch (Exception e) {
+            showErrorPopup("Failed to calculate the selling price: " + e.getMessage());
+        }
+        return -1.11;
     }
+
 }
