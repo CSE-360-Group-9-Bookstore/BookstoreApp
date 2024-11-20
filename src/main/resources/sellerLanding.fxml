@@ -1,14 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="bookstore.controllers.SellerController" alignment="CENTER" spacing="15" style="-fx-background-color: #222;">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-    <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
-    <Button fx:id="randomButton" text="Click Me!" onAction="#handleRandomAction" style="-fx-background-color: #444; -fx-text-fill: white; -fx-background-radius: 5;"/>
-</VBox>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="bookstore.controllers.SellerController">
+
+    <HBox style="-fx-background-color: white;"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+        <!-- Left Column -->
+        <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+            <Label fx:id="messageLabel" text="Welcome to Page 2!" style="-fx-text-fill: black; -fx-font-size: 16px;"/>
+
+            <Label text="Seller:" style="-fx-text-fill: black;"/>
+            <Label fx:id="sellerIDLabel" style="-fx-text-fill: black; -fx-font-size: 14px;"/>
+
+            <Label text="Select Duration" style="-fx-text-fill: black;"/>
+            <ComboBox fx:id="duration"/>
+
+            <Label text="Sales Quantity" style="-fx-text-fill: black;"/>
+            <Label fx:id="salesQuantityLabel" />
+
+            <Label text="Sales Revenue" style="-fx-text-fill: black;"/>
+            <Label fx:id="salesRevenueLabel" />
+
+            <Label text="Net Profit" style="-fx-text-fill: black;"/>
+            <Label fx:id="netProfitLabel" />
+
+            <Label text="Your Current Offerings" style="-fx-text-fill: black;"/>
+            <ScrollPane fitToWidth="true" fitToHeight="true">
+                <ListView fx:id="currentOfferings"/>
+            </ScrollPane>
+        </VBox>
+
+        <!-- Right Column -->
+        <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+            <Label text="Title" style="-fx-text-fill: black;"/>
+            <TextField fx:id="bookTitle" promptText="Enter book title"/>
+
+            <Label text="Author" style="-fx-text-fill: black;"/>
+            <TextField fx:id="author" promptText="Enter author"/>
+
+            <Label text="Description" style="-fx-text-fill: black;"/>
+            <TextArea fx:id="description" promptText="Enter description"/>
+
+            <Label text="ISBN-10" style="-fx-text-fill: black;"/>
+            <TextField fx:id="ISBN10" promptText="Enter ISBN-10"/>
+
+            <Label text="ISBN-13" style="-fx-text-fill: black;"/>
+            <TextField fx:id="ISBN13" promptText="Enter ISBN-13"/>
+
+            <Label text="Genre" style="-fx-text-fill: black;"/>
+            <ComboBox fx:id="bookGenre" promptText="Select Genre">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Computer Science"/>
+                        <String fx:value="Natural Science"/>
+                        <String fx:value="Mathematics"/>
+                        <String fx:value="Other"/>
+                        <String fx:value="English Language"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Condition" style="-fx-text-fill: black;"/>
+            <ComboBox fx:id="condition" promptText="Select Condition">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Used Like New"/>
+                        <String fx:value="Moderately Used"/>
+                        <String fx:value="Heavily Used"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text="Quantity" style="-fx-text-fill: black;"/>
+            <TextField fx:id="quantity" promptText="Enter quantity"/>
+
+            <Label text="Price" style="-fx-text-fill: black;"/>
+            <TextField fx:id="price" promptText="Enter price ($)"/>
+            <Button fx:id="updateListingButton" onAction="#createBookListing" text="Get Price"
+                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
+            <Label text="Selling Price" style="-fx-text-fill: black;"/>
+            <Label fx:id="sellingPrice" />
+
+
+        </VBox>
+
+    </HBox>
+</AnchorPane>

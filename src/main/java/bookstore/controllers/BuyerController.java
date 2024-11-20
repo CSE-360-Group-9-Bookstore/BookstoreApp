@@ -158,7 +158,9 @@ public class BuyerController {
             }
 
             buyButton.setVisible(false);
+
             logTransaction(selectedUUID, listing);
+
         } else {
             messageLabel.setText("Error: No book selected.");
         }
@@ -175,6 +177,7 @@ public class BuyerController {
         Listings.Listing selectedListing = allListings.get(listingUUID);
         buyButton.setVisible(true);
         if (selectedListing != null) {
+
             titleLabel.setText(selectedListing.bookTitle);
             authorLabel.setText(selectedListing.author);
             descriptionLabel.setText(selectedListing.description);
