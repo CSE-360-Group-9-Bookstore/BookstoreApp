@@ -9,8 +9,8 @@ public class Listings {
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
 
-    Map<String, Double> qualityFactor = new HashMap<>();
-    Map<String, Double> typeFactor = new HashMap<>();
+    public static Map<String, Double> qualityFactor = new HashMap<>();
+    public static Map<String, Double> typeFactor = new HashMap<>();
 
     public static class Listing {
         public UUID listingUUID;
@@ -26,6 +26,7 @@ public class Listings {
         public UUID sellerUUID;
         public int quantity;
         public String status;
+
 
         public Listing(String bookTitle, String author, String description,
                        long ISBN10, long ISBN13, String genre, String condition, double msrp,
@@ -43,6 +44,15 @@ public class Listings {
             this.sellerUUID = sellerUUID;
             this.quantity = quantity;
             this.status = "available";
+            qualityFactor.put("Used Like New", 1.00);
+            qualityFactor.put("Moderately Used", 0.75);
+            qualityFactor.put("Heavily Used", 0.5);
+            typeFactor.put("Computer Science", 5.00);
+            typeFactor.put("Natural Science", 15.00);
+            typeFactor.put("Mathematics", 10.00);
+            typeFactor.put("Other", -2.50);
+            typeFactor.put("English Language", 0.00);
+
         }
 
         public Listing(UUID uuid, String bookTitle, String author, String description,
@@ -61,6 +71,15 @@ public class Listings {
             this.sellerUUID = sellerUUID;
             this.quantity = quantity;
             this.status = "available";
+            qualityFactor.put("Used Like New", 1.00);
+            qualityFactor.put("Moderately Used", 0.75);
+            qualityFactor.put("Heavily Used", 0.5);
+            typeFactor.put("Computer Science", 5.00);
+            typeFactor.put("Natural Science", 15.00);
+            typeFactor.put("Mathematics", 10.00);
+            typeFactor.put("Other", -2.50);
+            typeFactor.put("English Language", 0.00);
+
         }
     }
 
