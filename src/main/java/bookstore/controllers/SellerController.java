@@ -110,9 +110,6 @@ public class SellerController {
         // Fetch and display current offerings
         List<String> bookNames = getSellerCurrentOfferings(sellerUUID);
         currentOfferings.setItems(FXCollections.observableArrayList(bookNames));
-
-        currentOfferings.setOnMouseClicked(this::handleBookSelection);
-
         // Define filter parameters for displaying listings in the messageLabel
         List<String> genres = Arrays.asList("Mathematics"); // Example genres to filter
         List<String> conditions = Arrays.asList("Used Like New"); // Example types to filter
@@ -148,7 +145,27 @@ public class SellerController {
         // Set the messageLabel text with filtered listing ID and title pairs
         messageLabel.setText(messageText.toString().trim()); // Remove trailing newline
     }
+    private void addInputChangeListeners() {
+        List<Control> inputFields = Arrays.asList(
+                bookTitle, author, description, ISBN10, ISBN13, price, quantity, bookGenre, condition
+        );
 
+        for (Control field : inputFields) {
+            if (field instanceof TextField) {
+                ((TextField) field).textProperty().addListener((observable, oldValue, newValue) -> resetFormState());
+            } else if (field instanceof TextArea) {
+                ((TextArea) field).textProperty().addListener((observable, oldValue, newValue) -> resetFormState());
+            } else if (field instanceof ComboBox) {
+                ((ComboBox<?>) field).valueProperty().addListener((observable, oldValue, newValue) -> resetFormState());
+            }
+        }
+    }
+
+    private void resetFormState() {
+        sellPriceCalced = false;
+        updateListingButton.setText("Calculate Sell Price");
+        sellingPrice.setText("$0.00");
+    }
     private void updateSalesStats() {
         // Get the selected month from the ComboBox
         String selectedMonth = duration.getValue();
@@ -168,9 +185,9 @@ public class SellerController {
 
             // Update the labels with the fetched stats
             if (salesStats != null) {
-                salesQuantityLabel.setText(""+ salesStats.get("totalSales"));
-                salesRevenueLabel.setText(""+ salesStats.get("totalCost"));
-                netProfitLabel.setText(""+ salesStats.get("totalProfit"));
+                salesQuantityLabel.setText(""+ Math.floor(salesStats.get("totalSales")*100)/100);
+                salesRevenueLabel.setText(""+ Math.floor(salesStats.get("totalCost")*100)/100);
+                netProfitLabel.setText(""+ Math.floor(salesStats.get("totalProfit")*100)/100);
             }
         }
     }
@@ -223,25 +240,28 @@ public class SellerController {
                 throw new IllegalArgumentException("Quantity must be greater than zero.");
             }
 
-            draft = new Listing(
-                    bookTitle.getText(),
-                    author.getText(),
-                    description.getText(),
-                    isbn10,
-                    isbn13,
-                    bookGenre.getValue(),
-                    condition.getValue(),
-                    priceValue,
-                    Session.getInstance().getUser().user_uuid,
-                    quantityValue
-            );
+
 
             if (!sellPriceCalced) {
+                draft = new Listing(
+                        bookTitle.getText(),
+                        author.getText(),
+                        description.getText(),
+                        isbn10,
+                        isbn13,
+                        bookGenre.getValue(),
+                        condition.getValue(),
+                        priceValue,
+                        Session.getInstance().getUser().user_uuid,
+                        quantityValue
+                );
+                System.out.println("CALCING PRICE " +draft.sellPrice);
                 draft.sellPrice = displaySellingPrice(draft);
+
                 updateListingButton.setText("Submit Listing");
             } else {
                 Listings.createListing(draft);
-                sellingPrice.setText("$" + String.format("%.2f", 0));
+                sellingPrice.setText("$" + Math.floor(draft.sellPrice*100)/100);
                 bookTitle.clear();
                 author.clear();
                 bookGenre.setValue(null);
@@ -250,7 +270,9 @@ public class SellerController {
                 ISBN13.clear();
                 price.clear();
                 quantity.clear();
-
+                sellingPrice.setText("$0.00");
+                currentOfferings.setItems(FXCollections.observableArrayList(
+                        getSellerCurrentOfferings(Session.getInstance().getUser().user_uuid)));
                 updateListingButton.setText("Calculate Sell Price");
             }
 
@@ -271,16 +293,7 @@ public class SellerController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    @FXML
-    private void handleBookSelection(MouseEvent event) {
-        String selectedBookTitle = currentOfferings.getSelectionModel().getSelectedItem();
-        if (selectedBookTitle != null) {
-            Listings.Listing selectedListing = getListingByTitle(selectedBookTitle);
-            if (selectedListing != null) {
-                populateBookDetails(selectedListing);
-            }
-        }
-    }
+
 
     private Listings.Listing getListingByTitle(String bookTitle) {
         UUID sellerUUID = Session.getInstance().getUser().user_uuid;
@@ -293,18 +306,6 @@ public class SellerController {
         return null;
     }
 
-    private void populateBookDetails(Listings.Listing listing) {
-        sellPriceCalced = false;
-        bookTitle.setText(listing.bookTitle);
-        author.setText(listing.author);
-        description.setText(listing.description);
-        ISBN10.setText(Long.toString(listing.ISBN10));
-        ISBN13.setText(Long.toString(listing.ISBN13));
-        bookGenre.setValue(listing.genre);
-        quantity.setText(Integer.toString(listing.quantity));
-        condition.setValue(listing.condition);
-        price.setText(Double.toString(listing.sellPrice));
-    }
 
 
     /**
