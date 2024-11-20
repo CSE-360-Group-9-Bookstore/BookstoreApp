@@ -68,7 +68,7 @@ public class Listings {
 
     public double calculateSellPrice(Listing draft) {
         double init = draft.msrp * qualityFactor.get(draft.condition) + typeFactor.get(draft.genre);
-        return Math.max(init * 1.025, 9.99); // (0.025% platform fee)
+        return Math.floor(Math.max(init * 1.025, 9.99) * 100))/100; // (0.025% platform fee)
     }
 
     public static String createListing(Listing finalListing) {
