@@ -185,7 +185,7 @@ public class BuyerController {
             isbn10Label.setText("ISBN-10: " + selectedListing.ISBN10);
             isbn13Label.setText("ISBN-13: " + selectedListing.ISBN13);
             conditionLabel.setText("Condition: \"" + selectedListing.condition+ "\"");
-            priceLabel.setText("$" + selectedListing.sellPrice);
+            priceLabel.setText(String.format("$%.2f", selectedListing.sellPrice));
             stockLabel.setText(selectedListing.quantity+ " Available");
         }
 

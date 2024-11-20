@@ -114,3 +114,58 @@
 2024-11-07 12:15:22,045 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.c.s.AkkaHttpServer - Running provided shutdown stop hooks - AsyncAppender-Worker-ASYNCSTDOUT
 2024-11-07 12:15:22,047 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - [JPro] -> Server stopped: {running_time: 35.315s, instances_count: 1, views_count: 1, os_name: Mac OS X, jpro_version: 2024.4.0, reason: jvm-shutdown} - AsyncAppender-Worker-ASYNCSTDOUT
 2024-11-07 12:15:22,047 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro.activity - Closing the server -> used memory: 67 MB  -  free system memory: 108 MB - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,218 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro.activity - Starting the server - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,218 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ -  *** Starting JPro: https://www.jpro.one/ *** - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,218 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - OS: Mac OS X - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,225 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - JPro: 2024.4.0 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,225 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - Java version: 23 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,225 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - JVM: 23 Homebrew - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,226 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - JavaFX jar: file:/Users/ragrwal/.m2/repository/org/openjfx/javafx-graphics/23.0.1-jpro/javafx-graphics-23.0.1-jpro-mac-aarch64.jar - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,227 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - Configuring logging from url: 'jar:file:/Users/ragrwal/.m2/repository/com/sandec/jpro/jpro-server_2.12/2024.4.0/jpro-server_2.12-2024.4.0.jar!/logback-jpro-default.xml' - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,422 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - JavaFX version: 23.0.1-jpro+0 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,447 [INFO] in JavaFX Application Thread - G1 Young Generation - JavaFX Application Thread
+2024-11-19 22:05:16,447 [INFO] in JavaFX Application Thread - G1 Concurrent GC - JavaFX Application Thread
+2024-11-19 22:05:16,447 [INFO] in JavaFX Application Thread - G1 Old Generation - JavaFX Application Thread
+2024-11-19 22:05:16,463 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - finished init! - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,465 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - [JPro] -> Server started: {start_time: 1732079116209, os_name: Mac OS X, jpro_version: 2024.4.0} - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,673 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] a.e.s.Slf4jLogger - Slf4jLogger started - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:16,941 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] play.api.Play - Application started (Prod) (no global state) - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:17,193 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.c.s.AkkaHttpServer - Enabling HTTP/2 on Akka HTTP server... - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:17,194 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.c.s.AkkaHttpServer - Listening for HTTP on /[0:0:0:0:0:0:0:0]:8080 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:18,732 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro - application requested: default params: Map() - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:18,736 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro - Creating Application: default - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:18,738 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro - remoteAddress 0:0:0:0:0:0:0:1 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:18,738 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro - host          localhost:8080 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:18,738 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro - uri           /app/ws/default - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:18,866 [INFO] in JavaFX Application Thread - PrismFontFactory - FontConfigManager.populateMaps!!!! - JavaFX Application Thread
+2024-11-19 22:05:18,891 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - [JPro] -> View created: {app_name: default, host_name: localhost:8080, instance_id: 1845941954, browser: Google Chrome 131.0.0.0, browser_url: http://localhost:8080/, client_ip: 0:0:0:0:0:0:0:1} - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:19,091 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.c.InstanceImpl - [JPro] -> Instance created: {app_name: default, host_name: localhost:8080, instance_id: 1845941954, browser: Google Chrome 131.0.0.0, browser_url: http://localhost:8080/, client_ip: 0:0:0:0:0:0:0:1} - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:23,408 [INFO] in JavaFX Application Thread - Client: bookstore.lib.User@289cc9f0 - JavaFX Application Thread
+2024-11-19 22:05:23,408 [INFO] in JavaFX Application Thread - Client: buyer - JavaFX Application Thread
+2024-11-19 22:05:23,408 [INFO] in JavaFX Application Thread - Client Role: buyer - JavaFX Application Thread
+2024-11-19 22:05:23,408 [INFO] in JavaFX Application Thread - Client Password: password - JavaFX Application Thread
+2024-11-19 22:05:23,408 [INFO] in JavaFX Application Thread - Client UUID: 15228e29-c0a0-415f-a7c0-4df7793db8d6 - JavaFX Application Thread
+2024-11-19 22:05:23,410 [INFO] in JavaFX Application Thread - PG: buyer - JavaFX Application Thread
+2024-11-19 22:05:23,410 [INFO] in JavaFX Application Thread - buyer - JavaFX Application Thread
+2024-11-19 22:05:23,410 [INFO] in JavaFX Application Thread - Loading FXML: buyerLanding.fxml - JavaFX Application Thread
+2024-11-19 22:05:23,411 [INFO] in JavaFX Application Thread - Loading FXML from: file:/Users/ragrwal/Documents/Rohan/ASU/F24%20Term%203%20Fall%202024/CSE%20360%20Intro%20to%20Software%20Engineering/Group%20Project/Phase3/BookstoreApp1/target/classes/buyerLanding.fxml - JavaFX Application Thread
+2024-11-19 22:05:23,814 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.m.t.SceneInputListener - On disposing SceneInputListener: primaryScene.window was null. Skipped the forced release of the mouse. - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,516 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - [JPro] -> View closed: {app_name: default, host_name: localhost:8080, instance_id: 1845941954, browser: Google Chrome 131.0.0.0, browser_url: http://localhost:8080/, client_ip: 0:0:0:0:0:0:0:1, reason: tab-closed} - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,526 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ -  - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,526 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - Application closed: - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,541 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - startTime      : Tue Nov 19 22:05:29 MST 2024       - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,541 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - averageLatency : 00:00:00.002  - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,542 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - averageJitter  : 00:00:00.001   - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,542 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - framerateServer: 00:00:00.000 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,542 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - framerateClient: 00:00:00.000 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,542 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - raw            : 439232 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,542 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ - zipped         : 93859 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:29,542 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.ViewInfo$ -  - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:05:30,518 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.c.InstanceImpl - [JPro] -> Instance closed: {app_name: default, host_name: localhost:8080, instance_id: 1845941954, browser: Google Chrome 131.0.0.0, browser_url: http://localhost:8080/, client_ip: 0:0:0:0:0:0:0:1, reason: close-tab-closed} - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,845 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.a.i.l.c.CoordinatedShutdownSupport - Starting synchronous coordinated shutdown with ServerStoppedReason reason and 2147508000 milliseconds timeout - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,849 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] a.a.CoordinatedShutdown - Running CoordinatedShutdown with reason [ServerStoppedReason] - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,854 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.c.s.AkkaHttpServer - Stopping Akka HTTP server... - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,861 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.c.s.AkkaHttpServer - Terminating server binding for /[0:0:0:0:0:0:0:0]:8080 - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,879 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] p.c.s.AkkaHttpServer - Running provided shutdown stop hooks - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,883 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.j.i.s.JProInitializer$ - [JPro] -> Server stopped: {running_time: 53.613s, instances_count: 0, views_count: 0, os_name: Mac OS X, jpro_version: 2024.4.0, reason: jvm-shutdown} - AsyncAppender-Worker-ASYNCSTDOUT
+2024-11-19 22:06:09,884 [INFO] in AsyncAppender-Worker-ASYNCSTDOUT - [[34mINFO [0;39m] c.jpro.activity - Closing the server -> used memory: 73 MB  -  free system memory: 114 MB - AsyncAppender-Worker-ASYNCSTDOUT
