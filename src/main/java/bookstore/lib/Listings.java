@@ -1,14 +1,7 @@
 package bookstore.lib;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import java.sql.*;
+import java.util.*;
 
 public class Listings {
 
@@ -16,16 +9,10 @@ public class Listings {
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
 
-
-    Map<String,Double> qualityFactor= new HashMap<>();
+    Map<String, Double> qualityFactor = new HashMap<>();
     Map<String, Double> typeFactor = new HashMap<>();
-    
-    /*
-     * Listing Has: a Listing ID and Linker-Seller-ID for the table
-     *  Full Book Info: (Title, Author, Descr, ISBNs, Genre, Condition, 
-     *  msrp(intial seller given price), sellPrice(final), qty(nbr of 1:1 books), status)
-     */
-    public class Listing {
+
+    public static class Listing {
         public UUID listingUUID;
         public String bookTitle;
         public String author;
@@ -39,7 +26,6 @@ public class Listings {
         public UUID sellerUUID;
         public int quantity;
         public String status;
-
 
         public Listing(String bookTitle, String author, String description,
                        long ISBN10, long ISBN13, String genre, String condition, double msrp,
@@ -57,17 +43,10 @@ public class Listings {
             this.sellerUUID = sellerUUID;
             this.quantity = quantity;
             this.status = "available";
-            qualityFactor.put("Used Like New", 1.00);
-            qualityFactor.put("Moderately Used", 0.66);
-            qualityFactor.put("Heavily Used", 0.33);
-            typeFactor.put("Computer Science", 5.00);
-            typeFactor.put("Natural Science", 15.00);
-            typeFactor.put("Mathematics", 10.00);
-            typeFactor.put("Other", -5.00);
-            typeFactor.put("English Language", 0.00);
         }
+
         public Listing(UUID uuid, String bookTitle, String author, String description,
-                       long ISBN10, long ISBN13, String genre, String condition, double msrp,double sellPrice,
+                       long ISBN10, long ISBN13, String genre, String condition, double msrp, double sellPrice,
                        UUID sellerUUID, int quantity) {
             this.listingUUID = uuid;
             this.bookTitle = bookTitle;
@@ -82,30 +61,18 @@ public class Listings {
             this.sellerUUID = sellerUUID;
             this.quantity = quantity;
             this.status = "available";
-            qualityFactor.put("Used Like New", 1.00);
-            qualityFactor.put("Moderately Used", 0.75);
-            qualityFactor.put("Heavily Used", 0.5);
-            typeFactor.put("Computer Science", 5.00);
-            typeFactor.put("Natural Science", 15.00);
-            typeFactor.put("Mathematics", 10.00);
-            typeFactor.put("Other", -2.50);
-            typeFactor.put("English Language", 0.00);
-
         }
-           }
+    }
+
+    // Methods (calculateSellPrice, createListing, etc.) go here
 
     public double calculateSellPrice(Listing draft) {
-
         double init = draft.msrp * qualityFactor.get(draft.condition) + typeFactor.get(draft.genre);
-
-        return Math.max(init * 1.025,9.99); // (0.025% platform fee)
+        return Math.max(init * 1.025, 9.99); // (0.025% platform fee)
     }
-    // Method to create a new listingad
+
     public static String createListing(Listing finalListing) {
-
-
         String insertQuery = "INSERT INTO \"Listings\" (book_title, author, description, \"ISBN-10\", \"ISBN-13\", genre, condition, msrp, sell_price, \"sellerUUID\", quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        //check dup throw err
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
 
