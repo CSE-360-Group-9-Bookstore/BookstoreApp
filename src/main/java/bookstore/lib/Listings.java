@@ -98,7 +98,7 @@ public class Listings {
 
         double init = draft.msrp * qualityFactor.get(draft.condition) + typeFactor.get(draft.genre);
 
-        return Math.max(init * 1.025,9.99); // (0.025% platform fee)
+        Math.floor(Math.max(init * 1.025,9.99) * 100)/100; // (0.025% platform fee)
     }
     // Method to create a new listingad
     public static String createListing(Listing finalListing) {
