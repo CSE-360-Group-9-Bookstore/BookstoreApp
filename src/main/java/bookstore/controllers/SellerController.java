@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import bookstore.lib.*;  // Import all classes from bookstore.lib
+import bookstore.lib.*;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Arrays;
@@ -14,10 +14,7 @@ import java.util.ArrayList;
 import javafx.scene.input.MouseEvent;
 import bookstore.lib.Listings.Listing;
 
-
-
 public class SellerController {
-
     Listings listings = new Listings();
     Users users = new Users(); // Add Users instance
     private boolean sellPriceCalced = false;
