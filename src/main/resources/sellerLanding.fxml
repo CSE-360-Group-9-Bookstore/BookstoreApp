@@ -92,8 +92,12 @@
 
             <Label text="Price" style="-fx-text-fill: black;"/>
             <TextField fx:id="price" promptText="Enter price ($)"/>
-            <Button fx:id="updateListingButton" onAction="#createBookListing" text="Get Price"
-                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
+            <HBox spacing="10">
+                <Button fx:id="calculatePriceButton" onAction="#calculateSellPrice" text="Calculate Sell Price"
+                        style="-fx-background-color: #444; -fx-text-fill: white;"/>
+                <Button fx:id="submitListingButton" onAction="#submitListing" text="Submit"
+                        style="-fx-background-color: #444; -fx-text-fill: white;" visible="false"/>
+            </HBox>
             <Label text="Selling Price" style="-fx-text-fill: black;"/>
             <Label fx:id="sellingPrice" />
 

@@ -78,10 +78,10 @@ public class SellerController {
     private TextField price;
 
     @FXML
-    private Button updateListingButton;
+    private Button calculatePriceButton;
 
     @FXML
-    private Button addNewListingButton;
+    private Button submitListingButton;
 
     @FXML
     private Label sellingPrice;
@@ -144,6 +144,12 @@ public class SellerController {
 
         // Set the messageLabel text with filtered listing ID and title pairs
         messageLabel.setText(messageText.toString().trim()); // Remove trailing newline
+
+        // Initialize submit button visibility
+        submitListingButton.setVisible(false);
+
+        // Add input change listeners
+        addInputChangeListeners();
     }
     private void addInputChangeListeners() {
         List<Control> inputFields = Arrays.asList(
@@ -163,7 +169,7 @@ public class SellerController {
 
     private void resetFormState() {
         sellPriceCalced = false;
-        updateListingButton.setText("Calculate Sell Price");
+        submitListingButton.setVisible(false);
         sellingPrice.setText("$0.00");
     }
     private void updateSalesStats() {
@@ -208,8 +214,9 @@ public class SellerController {
                 return 0;
         }
     }
+
     @FXML
-    private void createBookListing(ActionEvent event) {
+    private void calculateSellPrice(ActionEvent event) {
         try {
             if (bookTitle.getText() == null || bookTitle.getText().isEmpty()) {
                 throw new IllegalArgumentException("Book title cannot be empty.");
@@ -240,47 +247,57 @@ public class SellerController {
                 throw new IllegalArgumentException("Quantity must be greater than zero.");
             }
 
+            // Create draft listing
+            draft = new Listing(
+                    bookTitle.getText(),
+                    author.getText(),
+                    description.getText(),
+                    isbn10,
+                    isbn13,
+                    bookGenre.getValue(),
+                    condition.getValue(),
+                    priceValue,
+                    Session.getInstance().getUser().user_uuid,
+                    quantityValue
+            );
 
+            // Calculate and display selling price
+            draft.sellPrice = displaySellingPrice(draft);
 
-            if (!sellPriceCalced) {
-                draft = new Listing(
-                        bookTitle.getText(),
-                        author.getText(),
-                        description.getText(),
-                        isbn10,
-                        isbn13,
-                        bookGenre.getValue(),
-                        condition.getValue(),
-                        priceValue,
-                        Session.getInstance().getUser().user_uuid,
-                        quantityValue
-                );
-                System.out.println("CALCING PRICE " +draft.sellPrice);
-                draft.sellPrice = displaySellingPrice(draft);
+            // Set flag and show submit button
+            sellPriceCalced = true;
+            submitListingButton.setVisible(true);
 
-                updateListingButton.setText("Submit Listing");
-            } else {
-                Listings.createListing(draft);
-                sellingPrice.setText("$" + Math.floor(draft.sellPrice*100)/100);
-                bookTitle.clear();
-                author.clear();
-                bookGenre.setValue(null);
-                condition.setValue(null);
-                ISBN10.clear();
-                ISBN13.clear();
-                price.clear();
-                quantity.clear();
-                sellingPrice.setText("$0.00");
-                currentOfferings.setItems(FXCollections.observableArrayList(
-                        getSellerCurrentOfferings(Session.getInstance().getUser().user_uuid)));
-                updateListingButton.setText("Calculate Sell Price");
-            }
-
-            sellPriceCalced = !sellPriceCalced;
         } catch (NumberFormatException e) {
             showErrorPopup("Invalid number format: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             showErrorPopup(e.getMessage());
+        } catch (Exception e) {
+            showErrorPopup("An unexpected error occurred: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void submitListing(ActionEvent event) {
+        try {
+            if (!sellPriceCalced) {
+                throw new IllegalStateException("Please calculate the selling price before submitting.");
+            }
+            Listings.createListing(draft);
+            sellingPrice.setText("$" + Math.floor(draft.sellPrice*100)/100);
+            bookTitle.clear();
+            author.clear();
+            bookGenre.setValue(null);
+            condition.setValue(null);
+            ISBN10.clear();
+            ISBN13.clear();
+            price.clear();
+            quantity.clear();
+            description.clear();
+            resetFormState();
+            currentOfferings.setItems(FXCollections.observableArrayList(
+                    getSellerCurrentOfferings(Session.getInstance().getUser().user_uuid)));
+
         } catch (Exception e) {
             showErrorPopup("An unexpected error occurred: " + e.getMessage());
         }
