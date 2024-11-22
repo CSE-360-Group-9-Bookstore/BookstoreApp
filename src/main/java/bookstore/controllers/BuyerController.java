@@ -1,5 +1,8 @@
 package bookstore.controllers;
 
+
+import javafx.fxml.FXML;
+
 import bookstore.lib.Listings;
 import bookstore.lib.Logs;
 import bookstore.lib.Session;
@@ -9,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -51,6 +54,12 @@ public class BuyerController {
     private Button buyButton;
 
     @FXML
+    private ComboBox<String> genreCB;
+
+    @FXML
+    private ComboBox<String> conCB;
+
+    @FXML
     private void initialize() {
         // Initial setup
         setupComboBoxes();
@@ -71,6 +80,7 @@ public class BuyerController {
         ObservableList<String> conditions = FXCollections.observableArrayList(
                 "", "Used Like New", "Moderately Used", "Heavily Used");
         conCB.setItems(conditions);
+
 
         // Add listeners to trigger filtering
         genreCB.setOnAction(e -> applyFilters());
