@@ -8,6 +8,7 @@ public class Users {
     private static final String DB_URL = "jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres";
     private static final String USER = "postgres.jsxtgxrxqaoyeetpmlhd";
     private static final String PASS = "CSE360Group9$";
+
     public String addUser(String username, String password, String role) {
         if (username == null || password == null || role == null ||
                 username.isEmpty() || password.isEmpty() || role.isEmpty()) {
@@ -59,33 +60,17 @@ public class Users {
             return "Error: Unable to retrieve password.";
         }
     }
-    public String authenticateUser(String username, String password) {
-        String authResult = authenticate(username, password);
-        if (authResult.startsWith("Error:")) {
 
-            return "error";
-        } else {
-            String role = authResult;
-
-            System.out.println("Role: " + role);
-
-            role = role.replaceAll("[^a-zA-Z0-9]", "");
-
-
-
-
-            if(!("admin".equals(role)) &&!(role.equals("buyer"))&&!(role.equals("seller"))){role = "error";}
-            return role;
-
-        }
+    public User authenticateUser(String username, String password) {
+        return authenticate(username, password);
     }
 
-    private String authenticate(String username, String password) {
+    private User authenticate(String username, String password) {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-            return "Error: Username and password must be provided.";
+            return null;
         }
 
-        String query = "SELECT role FROM \"Users\" WHERE username = ? AND password = ?";
+        String query = "SELECT id, username, password, role FROM \"Users\" WHERE username = ? AND password = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -95,25 +80,42 @@ public class Users {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-
-                return rs.getString("role");
+                UUID id = rs.getObject("id", java.util.UUID.class);
+                String uname = rs.getString("username");
+                String pwd = rs.getString("password");
+                String role = rs.getString("role");
+                User user = new User(id, uname, pwd, role);
+                return user;
             } else {
-
-                String checkUserQuery = "SELECT 1 FROM \"Users\" WHERE username = ?";
-                try (PreparedStatement checkStmt = conn.prepareStatement(checkUserQuery)) {
-                    checkStmt.setString(1, username);
-                    ResultSet rsCheck = checkStmt.executeQuery();
-                    if (rsCheck.next()) {
-                        return "Error: Incorrect password.";
-                    } else {
-                        return "Error: Username not found.";
-                    }
-                }
+                // Authentication failed
+                return null;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Error: Unable to authenticate.";
+            return null;
+        }
+    }
+
+    //get username by id
+    public String getUsernameById(UUID id) {
+        String query = "SELECT username FROM \"Users\" WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setObject(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("username");
+            } else {
+                return "Error: User not found.";
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error: Unable to retrieve username.";
         }
     }
 
